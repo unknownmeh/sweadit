@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Weight of Silence — Aditya Tumu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink: #1a1612;
+      --paper: #f5f0e8;
+      --dust: #c9b99a;
+      --shadow: #6b5a4e;
+      --mist: #e8dfd0;
+      --accent: #8b6f5e;
+      --fade: rgba(26,22,18,0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: 'EB Garamond', Georgia, serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Grain texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.5;
+    }
+
+    /* Ink bleed vignette */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(26,22,18,0.18) 100%);
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    /* ── RAIN CANVAS ── */
+    #rain-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.13;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 80px 40px 60px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      text-align: center;
+      margin-bottom: 64px;
+      opacity: 0;
+      animation: fadeUp 1.4s ease 0.2s forwards;
+    }
+
+    .title-label {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      line-height: 1.15;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--dust);
+      margin: 20px auto 0;
+    }
+
+    /* ── POEM BODY ── */
+    .poem {
+      margin-bottom: 56px;
+    }
+
+    .stanza {
+      margin-bottom: 44px;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .stanza.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stanza p {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: clamp(1.08rem, 2.5vw, 1.22rem);
+      line-height: 2.0;
+      color: var(--ink);
+      font-style: italic;
+      position: relative;
+      padding-left: 28px;
+    }
+
+    .stanza p::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      bottom: 0.6em;
+      width: 1.5px;
+      background: var(--dust);
+      opacity: 0;
+      transition: opacity 0.6s ease 0.4s;
+    }
+
+    .stanza.visible p::before {
+      opacity: 1;
+    }
+
+    .stanza p span {
+      display: block;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      text-align: center;
+      margin: 48px 0;
+      color: var(--dust);
+      font-size: 1.1rem;
+      letter-spacing: 0.5em;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 2.4s forwards;
+    }
+
+    /* ── AUTHOR CARD ── */
+    .author-card {
+      border-top: 1px solid var(--mist);
+      padding-top: 36px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      opacity: 0;
+      animation: fadeUp 1s ease 2.8s forwards;
+    }
+
+    .author-monogram {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--mist);
+      border: 1px solid var(--dust);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--shadow);
+      flex-shrink: 0;
+      letter-spacing: 0.05em;
+    }
+
+    .author-info {
+      line-height: 1.6;
+    }
+
+    .author-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+    }
+
+    .author-pen {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.88rem;
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    /* ── NAVIGATION BUTTONS ── */
+    .nav-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 64px;
+      padding-top: 40px;
+      border-top: 1px solid var(--mist);
+      opacity: 0;
+      animation: fadeUp 1s ease 3.2s forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 28px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--shadow);
+      border: 1px solid var(--dust);
+    }
+
+    .btn-ghost:hover {
+      background: var(--mist);
+      color: var(--ink);
+      border-color: var(--shadow);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--fade);
+    }
+
+    .btn-solid {
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--ink);
+    }
+
+    .btn-solid:hover {
+      background: var(--shadow);
+      border-color: var(--shadow);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(26,22,18,0.18);
+    }
+
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── FLOATING PARTICLES ── */
+    .particle {
+      position: fixed;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: var(--dust);
+      pointer-events: none;
+      z-index: 2;
+      animation: drift linear infinite;
+      opacity: 0;
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes drift {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(-20px) translateX(30px); opacity: 0; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 500px) {
+      .page { padding: 56px 24px 40px; }
+      .nav-actions { flex-direction: column; align-items: center; }
+      .btn { width: 200px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="rain-canvas"></canvas>
+
+<!-- Floating dust particles -->
+<div id="particles"></div>
+
+<main class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <p class="title-label">A Poem</p>
+    <h1>The Weight of<br>Silence</h1>
+  </header>
+
+  <!-- Poem -->
+  <article class="poem">
+
+    <div class="stanza">
+      <p>
+        <span>He was avoided, yet he said no word,</span>
+        <span>His silence louder than screams unheard.</span>
+        <span>Unseen, unvalued, his heart grew tight,</span>
+        <span>His pain hidden out of sight.</span>
+      </p>
+    </div>
+
+    <div class="stanza">
+      <p>
+        <span>Ignored by many, betrayed by trust,</span>
+        <span>His fragile soul turned into dust.</span>
+        <span>He lost himself in a world so cold,</span>
+        <span>Where stories of pain remain untold.</span>
+      </p>
+    </div>
+
+    <div class="stanza">
+      <p>
+        <span>He cared too much, his heart exposed,</span>
+        <span>Only to find it cruelly opposed.</span>
+        <span>Respect he gave, insults he received,</span>
+        <span>A life of giving, yet always deceived.</span>
+      </p>
+    </div>
+
+    <div class="stanza">
+      <p>
+        <span>Willing to break for other's gain,</span>
+        <span>Yet left with scars that echo the pain.</span>
+        <span>If he had chosen himself to defend,</span>
+        <span>Perhaps his heart wouldn't break or bend.</span>
+      </p>
+    </div>
+
+    <div class="stanza">
+      <p>
+        <span>The pain of an introvert is quiet and deep,</span>
+        <span>Their battles fought where no one can peep.</span>
+        <span>In their silence, a storm resides,</span>
+        <span>A fragile heart that the world divides.</span>
+      </p>
+    </div>
+
+  </article>
+
+  <!-- Ornament -->
+  <div class="divider">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+  <!-- Author -->
+  <footer class="author-card">
+    <div class="author-monogram">AT</div>
+    <div class="author-info">
+      <div class="author-name">Aditya Tumu</div>
+      <div class="author-pen">Writing Pen — Lucifer</div>
+    </div>
+  </footer>
+
+  <!-- Navigation -->
+  <nav class="nav-actions">
+    <button class="btn btn-ghost" onclick="history.back()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <a href="/" class="btn btn-solid">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+  </nav>
+
+</main>
+
+<script>
+  // ── SCROLL-TRIGGERED STANZA REVEALS ──
+  const stanzas = document.querySelectorAll('.stanza');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        // small cascading delay per stanza index
+        const idx = Array.from(stanzas).indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('visible'), idx * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  stanzas.forEach(s => observer.observe(s));
+
+  // Trigger first stanza immediately (above fold)
+  setTimeout(() => {
+    stanzas.forEach((s, i) => {
+      const rect = s.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        setTimeout(() => s.classList.add('visible'), 800 + i * 200);
+      }
+    });
+  }, 100);
+
+  // ── RAIN CANVAS ──
+  const canvas = document.getElementById('rain-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const drops = Array.from({ length: 60 }, () => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    len: 10 + Math.random() * 20,
+    speed: 0.4 + Math.random() * 0.8,
+    opacity: 0.2 + Math.random() * 0.5
+  }));
+
+  function drawRain() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#6b5a4e';
+    ctx.lineWidth = 0.8;
+
+    drops.forEach(d => {
+      ctx.globalAlpha = d.opacity;
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x - 1, d.y + d.len);
+      ctx.stroke();
+      d.y += d.speed;
+      if (d.y > canvas.height) {
+        d.y = -d.len;
+        d.x = Math.random() * canvas.width;
+      }
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(drawRain);
+  }
+  drawRain();
+
+  // ── DUST PARTICLES ──
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (18 + Math.random() * 24) + 's';
+    p.style.animationDelay = (Math.random() * 20) + 's';
+    p.style.width = p.style.height = (1 + Math.random() * 2.5) + 'px';
+    p.style.opacity = '0';
+    container.appendChild(p);
+  }
+</script>
+</body>
+</html>

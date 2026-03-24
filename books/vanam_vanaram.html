@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>వనం వానరం — ఆదిత్య</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Telugu&family=Noto+Serif+Telugu:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --forest-deep:   #0a1a0a;
+  --forest-dark:   #0f2210;
+  --forest-mid:    #1a3a1a;
+  --forest-light:  #2d5a2d;
+  --canopy:        #3a7a3a;
+  --leaf:          #4e9e4e;
+  --leaf-bright:   #6abf6a;
+  --leaf-gold:     #c8a84b;
+  --sunbeam:       #ffe88a;
+  --bark:          #5c3a1e;
+  --bark-light:    #8b5e3c;
+  --monkey-brown:  #c4874a;
+  --monkey-face:   #e8b87a;
+  --sky-dawn:      #1a2a3a;
+  --mist:          rgba(180,230,180,0.07);
+  --text-main:     #e8f5e8;
+  --text-soft:     #a8c8a8;
+  --text-gold:     #d4aa55;
+  --text-dim:      #6a8a6a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--forest-deep);
+  color: var(--text-main);
+  font-family: 'Noto Serif Telugu', 'Tiro Telugu', Georgia, serif;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ── FOREST CANVAS BG ── */
+#forestCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  z-index: 10;
+}
+
+.hero-monkey-canvas {
+  width: min(320px, 80vw);
+  height: min(320px, 80vw);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+#monkeyCanvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.hero-eyebrow {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  letter-spacing: 0.35em;
+  color: var(--text-gold);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.5s forwards;
+  margin-bottom: 0.8rem;
+}
+
+.hero-title {
+  font-family: 'Noto Serif Telugu', serif;
+  font-size: clamp(2.8rem, 10vw, 6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  background: linear-gradient(160deg, var(--leaf-bright), var(--leaf-gold), var(--sunbeam));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0;
+  animation: fadeUp 1.2s ease 0.7s forwards;
+  text-shadow: none;
+  filter: drop-shadow(0 4px 24px rgba(74,158,74,0.3));
+}
+
+.hero-sub {
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  color: var(--text-soft);
+  letter-spacing: 0.2em;
+  opacity: 0;
+  animation: fadeUp 1s ease 1s forwards;
+  margin-top: 0.5rem;
+}
+
+.hero-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.8rem auto;
+  width: min(360px, 80vw);
+  opacity: 0;
+  animation: fadeUp 1s ease 1.2s forwards;
+}
+.hero-divider::before, .hero-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--leaf-gold), transparent);
+}
+.hero-divider-leaf {
+  font-size: 1.2rem;
+  animation: leaf-sway 3s ease-in-out infinite;
+  display: inline-block;
+}
+@keyframes leaf-sway {
+  0%,100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+}
+
+.scroll-down {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.8s forwards;
+}
+.scroll-down span {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.scroll-arrow {
+  width: 18px; height: 18px;
+  border-right: 1px solid var(--leaf-gold);
+  border-bottom: 1px solid var(--leaf-gold);
+  transform: rotate(45deg);
+  animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%,100% { transform: rotate(45deg) translateY(0); }
+  50% { transform: rotate(45deg) translateY(5px); }
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── STORY WRAPPER ── */
+.story-wrapper {
+  position: relative;
+  z-index: 10;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 clamp(1.2rem, 6vw, 4rem) 6rem;
+}
+
+/* ── STANZA CARD ── */
+.stanza-card {
+  background: rgba(15,34,16,0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(74,158,74,0.2);
+  border-radius: 20px;
+  padding: clamp(1.8rem, 5vw, 3rem);
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(106,191,106,0.08);
+}
+.stanza-card.visible { opacity:1; transform:translateY(0); }
+.stanza-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+  background: linear-gradient(to right, transparent, var(--leaf), var(--leaf-gold), var(--leaf), transparent);
+}
+.stanza-card::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,158,74,0.06) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+/* ── ICON BADGE ── */
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-gold);
+  margin-bottom: 1.2rem;
+  font-family: 'Playfair Display', serif;
+}
+.badge-icon { font-size: 1rem; }
+
+/* ── TELUGU TEXT ── */
+.telugu-text {
+  font-family: 'Noto Serif Telugu', serif;
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  line-height: 2.2;
+  color: var(--text-main);
+  font-weight: 400;
+}
+.telugu-text .line {
+  display: block;
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.stanza-card.visible .telugu-text .line {
+  opacity: 1;
+  transform: translateX(0);
+}
+.stanza-card.visible .telugu-text .line:nth-child(1)  { transition-delay: 0.1s; }
+.stanza-card.visible .telugu-text .line:nth-child(2)  { transition-delay: 0.2s; }
+.stanza-card.visible .telugu-text .line:nth-child(3)  { transition-delay: 0.3s; }
+.stanza-card.visible .telugu-text .line:nth-child(4)  { transition-delay: 0.4s; }
+.stanza-card.visible .telugu-text .line:nth-child(5)  { transition-delay: 0.5s; }
+.stanza-card.visible .telugu-text .line:nth-child(6)  { transition-delay: 0.6s; }
+.stanza-card.visible .telugu-text .line:nth-child(7)  { transition-delay: 0.7s; }
+.stanza-card.visible .telugu-text .line:nth-child(8)  { transition-delay: 0.8s; }
+.stanza-card.visible .telugu-text .line:nth-child(9)  { transition-delay: 0.9s; }
+.stanza-card.visible .telugu-text .line:nth-child(10) { transition-delay: 1.0s; }
+.stanza-card.visible .telugu-text .line:nth-child(11) { transition-delay: 1.1s; }
+.stanza-card.visible .telugu-text .line:nth-child(12) { transition-delay: 1.2s; }
+.stanza-card.visible .telugu-text .line:nth-child(13) { transition-delay: 1.3s; }
+
+.highlight-line {
+  color: var(--leaf-gold);
+  font-weight: 600;
+}
+.italic-line { font-style: italic; color: var(--text-soft); }
+
+/* ── CORE POEM CARD (special) ── */
+.poem-core {
+  background: rgba(10,26,10,0.88);
+  border-color: rgba(196,135,74,0.3);
+  box-shadow: 0 12px 50px rgba(0,0,0,0.6), 0 0 60px rgba(74,158,74,0.05), inset 0 1px 0 rgba(196,135,74,0.12);
+}
+.poem-core::before {
+  background: linear-gradient(to right, transparent, var(--monkey-brown), var(--sunbeam), var(--monkey-brown), transparent);
+}
+.poem-core .telugu-text {
+  font-size: clamp(1.05rem, 3vw, 1.3rem);
+}
+.poem-core .telugu-text .line { color: var(--text-main); }
+.poem-core .opening-quote {
+  font-size: 4rem;
+  color: var(--leaf-gold);
+  opacity: 0.25;
+  font-family: Georgia, serif;
+  line-height: 1;
+  float: left;
+  margin: -0.2em 0.1em 0 -0.15em;
+}
+
+/* ── FAREWELL CARD ── */
+.farewell-card {
+  text-align: center;
+  background: linear-gradient(160deg, rgba(10,26,10,0.9), rgba(20,10,5,0.85));
+  border-color: rgba(196,135,74,0.25);
+}
+.farewell-card .telugu-text { text-align: right; }
+.author-sig {
+  display: block;
+  margin-top: 1.5rem;
+  text-align: right;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--text-gold);
+  opacity: 0;
+  transition: opacity 0.8s ease 1.5s;
+}
+.farewell-card.visible .author-sig { opacity: 1; }
+
+/* ── FALLING LEAVES ── */
+.leaves-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+.leaf-fall {
+  position: absolute;
+  top: -40px;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+  animation: fall linear infinite;
+  opacity: 0.7;
+}
+@keyframes fall {
+  0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity:0; }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(110vh) rotate(720deg) translateX(var(--sway)); opacity:0; }
+}
+
+/* ── PROGRESS BAR ── */
+#progressBar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(to right, var(--leaf), var(--leaf-gold), var(--sunbeam));
+  z-index: 9999;
+  box-shadow: 0 0 8px var(--leaf-gold);
+  transition: width 0.15s linear;
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid rgba(74,158,74,0.15);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+.footer-title {
+  font-family: 'Noto Serif Telugu', serif;
+  font-size: 1.2rem;
+  color: var(--text-gold);
+  margin-bottom: 0.4rem;
+}
+.footer-note {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-family: 'Playfair Display', serif;
+}
+
+@media (max-width: 500px) {
+  .telugu-text { font-size: 1rem; line-height: 2; }
+  .stanza-card { padding: 1.4rem; border-radius: 14px; }
+}
+
+::selection { background: rgba(74,158,74,0.25); color: var(--text-main); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--forest-deep); }
+::-webkit-scrollbar-thumb { background: var(--forest-light); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progressBar" style="width:0%"></div>
+
+<!-- Background forest canvas -->
+<canvas id="forestCanvas"></canvas>
+
+<!-- Falling leaves -->
+<div class="leaves-container" id="leavesContainer"></div>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-monkey-canvas">
+    <canvas id="monkeyCanvas" width="320" height="320"></canvas>
+  </div>
+
+  <p class="hero-eyebrow">ఆదిత్య రాసిన కవిత</p>
+  <h1 class="hero-title">వనం వానరం</h1>
+  <p class="hero-sub">A Forest. A Monkey. A Friendship Forever.</p>
+
+  <div class="hero-divider">
+    <span class="hero-divider-leaf">🍃</span>
+  </div>
+
+  <div class="scroll-down">
+    <span>చదవండి</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ══════════ STORY ══════════ -->
+<main class="story-wrapper">
+
+  <!-- Stanza 1: College intro -->
+  <div class="stanza-card" data-card>
+    <div class="card-badge"><span class="badge-icon">🎓</span> కాలేజీ రోజులు</div>
+    <div class="telugu-text">
+      <span class="line">కాలేజీ లో చేరినపుడు ఎవరు, ఎలా వుంటారో</span>
+      <span class="line">మనతో కలుస్తరా - మేము వాల్లతో కలవగలమా,</span>
+      <span class="line">కొన్ని భయాల మధ్యలోని చిన్న ధైర్యం వల్ల</span>
+      <span class="line highlight-line">స్నేహితులు అనే వాళ్ళు దొరుకుతారు ,</span>
+    </div>
+  </div>
+
+  <!-- Stanza 2: Friendship magic -->
+  <div class="stanza-card" data-card>
+    <div class="card-badge"><span class="badge-icon">🌿</span> స్నేహం యొక్క మహత్మ్యం</div>
+    <div class="telugu-text">
+      <span class="line">ఆ స్నేహంలో ఉన్నా మర్మం వలనో ,</span>
+      <span class="line">మహత్మ్యం వలనో , మాయ వలనో</span>
+      <span class="line italic-line">ఎన్నో తుంటరి పనులు,</span>
+      <span class="line italic-line">అల్లరి చేష్టలు</span>
+      <span class="line">ఇలా ఉంటాయి —</span>
+    </div>
+  </div>
+
+  <!-- Core poem: Vanam Vaanaram -->
+  <div class="stanza-card poem-core" data-card>
+    <div class="card-badge"><span class="badge-icon">🐒</span> వనం వానరం కథ</div>
+    <div class="telugu-text">
+      <span class="opening-quote">"</span>
+      <span class="line highlight-line">వనం లోని వానరం,</span>
+      <span class="line">వానలో వనమంతా వెతుకుతూ</span>
+      <span class="line">కనిపించని ఆనందం కోసం చేసే పని చేయలేక ,</span>
+      <span class="line highlight-line">వనం - వానరం స్నేహితులు గా మారాయి.</span>
+      <span class="line">మారిన క్షణం నుండి</span>
+      <span class="line">ఎన్నో అనుభవాలు ,</span>
+      <span class="line">ఎన్నెన్నో జ్ఞాపకాలను సొంతం చేసుకున్నాయి.</span>
+    </div>
+  </div>
+
+  <!-- Farewell stanza -->
+  <div class="stanza-card" data-card>
+    <div class="card-badge"><span class="badge-icon">🍂</span> వీడ్కోలు</div>
+    <div class="telugu-text">
+      <span class="line">చివరికి వనాన్ని వీడి వెళ్లాల్సిన సమయం వచ్చిన వానరం కి</span>
+      <span class="line">ఆ కొన్ని జ్ఞాపకాలనే గుర్తు చేసుకుంటూ</span>
+      <span class="line">తప్పని పరిస్థితి వలన, జీవితం లోని మరో ఘట్టం లోకి వెళ్లిపోవాలి అని తెలిసిన ఆ వానరం ,</span>
+      <span class="line highlight-line">చాల బాధతో ఆ వనాని కి వీడ్కోలు చెప్పింది</span>
+      <span class="line">—</span>
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div class="stanza-card farewell-card" data-card>
+    <div class="card-badge"><span class="badge-icon">🌄</span> ముందుకు...</div>
+    <div class="telugu-text">
+      <span class="line">ఘట్టం వేరు కాబట్టి స్నేహితుడు అయిన వనాన్ని వానరం వీడక తప్పలేదు .</span>
+      <span class="line">అలాగే ,</span>
+      <span class="line">ఈ జ్ఞాపకాలు అన్నీ చిన్నవే అయినా</span>
+      <span class="line">గడిపిన క్షణాలను గుర్తు చేసుకుంటూ</span>
+      <span class="line highlight-line">ముందుకు వెళ్ళక తప్పదు .</span>
+      <span class="line">అలా చేరాల్సిన గమ్యం కోసం</span>
+      <span class="line highlight-line">స్నేహితుల్ని కూడా వీడక తప్పదు .</span>
+    </div>
+    <span class="author-sig">— ఆదిత్య.</span>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-title">వనం వానరం 🌿🐒</div>
+  <div class="footer-note">by Aditya · A poem about friendship, forest, and farewell</div>
+</footer>
+
+<script>
+// ══════════ FOREST BACKGROUND CANVAS ══════════
+const fc = document.getElementById('forestCanvas');
+const fctx = fc.getContext('2d');
+
+function resizeFC() {
+  fc.width  = window.innerWidth;
+  fc.height = window.innerHeight;
+}
+resizeFC();
+window.addEventListener('resize', resizeFC);
+
+// Trees data
+const trees = [];
+function initTrees() {
+  trees.length = 0;
+  const count = Math.max(8, Math.floor(fc.width / 120));
+  for (let i = 0; i < count; i++) {
+    trees.push({
+      x: (i / count) * fc.width + Math.random() * (fc.width / count),
+      height: 180 + Math.random() * 200,
+      width: 14 + Math.random() * 18,
+      swayOffset: Math.random() * Math.PI * 2,
+      swaySpeed: 0.3 + Math.random() * 0.4,
+      layer: i % 3,
+      leafSize: 60 + Math.random() * 80,
+      leafLayers: 3 + Math.floor(Math.random() * 3)
+    });
+  }
+}
+initTrees();
+window.addEventListener('resize', initTrees);
+
+// Fireflies
+const fireflies = [];
+for (let i = 0; i < 40; i++) {
+  fireflies.push({
+    x: Math.random(),
+    y: 0.3 + Math.random() * 0.6,
+    r: 1 + Math.random() * 2,
+    phase: Math.random() * Math.PI * 2,
+    speed: 0.003 + Math.random() * 0.005,
+    drift: (Math.random() - 0.5) * 0.0004
+  });
+}
+
+// Mist layers
+const mistLayers = [
+  { y: 0.85, alpha: 0.12, speed: 0.0003, offset: 0 },
+  { y: 0.75, alpha: 0.07, speed: 0.0005, offset: 100 },
+  { y: 0.65, alpha: 0.04, speed: 0.0002, offset: 200 },
+];
+
+let time = 0;
+
+function drawForest() {
+  time += 0.016;
+  fctx.clearRect(0, 0, fc.width, fc.height);
+
+  // Sky gradient
+  const skyGrad = fctx.createLinearGradient(0, 0, 0, fc.height);
+  skyGrad.addColorStop(0,   '#040c04');
+  skyGrad.addColorStop(0.4, '#071407');
+  skyGrad.addColorStop(0.7, '#0d1e0d');
+  skyGrad.addColorStop(1,   '#152815');
+  fctx.fillStyle = skyGrad;
+  fctx.fillRect(0, 0, fc.width, fc.height);
+
+  // Stars
+  fctx.save();
+  for (let i = 0; i < 80; i++) {
+    const sx = ((i * 137.5) % 1) * fc.width;
+    const sy = ((i * 91.3) % 0.35) * fc.height;
+    const twinkle = 0.4 + 0.6 * Math.abs(Math.sin(time * 0.8 + i));
+    fctx.globalAlpha = twinkle * 0.5;
+    fctx.fillStyle = '#e8f5e8';
+    const sr = 0.5 + ((i * 73) % 1);
+    fctx.beginPath();
+    fctx.arc(sx, sy, sr, 0, Math.PI*2);
+    fctx.fill();
+  }
+  fctx.restore();
+
+  // Moon
+  const moonX = fc.width * 0.82;
+  const moonY = fc.height * 0.12;
+  const moonGlow = fctx.createRadialGradient(moonX, moonY, 0, moonX, moonY, 80);
+  moonGlow.addColorStop(0, 'rgba(200,230,200,0.15)');
+  moonGlow.addColorStop(1, 'transparent');
+  fctx.fillStyle = moonGlow;
+  fctx.beginPath();
+  fctx.arc(moonX, moonY, 80, 0, Math.PI*2);
+  fctx.fill();
+  fctx.fillStyle = 'rgba(220,240,220,0.9)';
+  fctx.beginPath();
+  fctx.arc(moonX, moonY, 22, 0, Math.PI*2);
+  fctx.fill();
+
+  // Sunbeams from moon
+  fctx.save();
+  fctx.translate(moonX, moonY);
+  for (let i = 0; i < 8; i++) {
+    const angle = (i / 8) * Math.PI * 2 + time * 0.05;
+    const grad = fctx.createLinearGradient(0, 0, Math.cos(angle)*200, Math.sin(angle)*200);
+    grad.addColorStop(0, 'rgba(200,240,200,0.12)');
+    grad.addColorStop(1, 'transparent');
+    fctx.strokeStyle = grad;
+    fctx.lineWidth = 2 + Math.sin(time + i) * 1;
+    fctx.globalAlpha = 0.3 + 0.2 * Math.sin(time * 0.5 + i);
+    fctx.beginPath();
+    fctx.moveTo(Math.cos(angle)*24, Math.sin(angle)*24);
+    fctx.lineTo(Math.cos(angle)*200, Math.sin(angle)*200);
+    fctx.stroke();
+  }
+  fctx.restore();
+
+  // Draw trees (back to front)
+  const layerColors = [
+    { bark: '#1a3a1a', leaf: '#1e4020', leafAlt: '#264a28' },
+    { bark: '#2d5c2a', leaf: '#2d6030', leafAlt: '#386838' },
+    { bark: '#3a7a3a', leaf: '#4e9e4e', leafAlt: '#5aaa5a' },
+  ];
+
+  [2, 1, 0].forEach(layer => {
+    trees.filter(t => t.layer === layer).forEach(tree => {
+      const sway = Math.sin(time * tree.swaySpeed + tree.swayOffset) * 4;
+      const baseY = fc.height * 0.92;
+      const topY = baseY - tree.height;
+      const colors = layerColors[layer];
+
+      // Trunk
+      fctx.save();
+      const trunkGrad = fctx.createLinearGradient(tree.x - tree.width/2, 0, tree.x + tree.width/2, 0);
+      trunkGrad.addColorStop(0, '#1a1206');
+      trunkGrad.addColorStop(0.4, colors.bark);
+      trunkGrad.addColorStop(1, '#0d0a04');
+      fctx.fillStyle = trunkGrad;
+      fctx.beginPath();
+      fctx.moveTo(tree.x - tree.width/2, baseY);
+      fctx.quadraticCurveTo(tree.x + sway * 0.3, baseY - tree.height * 0.5, tree.x + sway, topY);
+      fctx.lineTo(tree.x + tree.width/2 + sway, topY);
+      fctx.quadraticCurveTo(tree.x + tree.width/2 + sway * 0.3, baseY - tree.height * 0.5, tree.x + tree.width/2, baseY);
+      fctx.closePath();
+      fctx.fill();
+      fctx.restore();
+
+      // Leaf canopy layers
+      for (let li = 0; li < tree.leafLayers; li++) {
+        const ly = topY + li * (tree.leafSize * 0.45) - tree.leafSize * 0.3;
+        const lx = tree.x + sway * (1 - li * 0.2);
+        const lsize = tree.leafSize * (1 - li * 0.15);
+        const leafSwayX = sway * 0.8;
+        const leafSwayY = Math.cos(time * tree.swaySpeed + tree.swayOffset) * 2;
+
+        fctx.save();
+        fctx.globalAlpha = 0.85 - li * 0.05;
+
+        // Shadow
+        const shGrad = fctx.createRadialGradient(lx+leafSwayX+4, ly+leafSwayY+6, 0, lx+leafSwayX, ly+leafSwayY, lsize);
+        shGrad.addColorStop(0, 'rgba(0,0,0,0.25)');
+        shGrad.addColorStop(1, 'transparent');
+        fctx.fillStyle = shGrad;
+        fctx.beginPath();
+        fctx.ellipse(lx+leafSwayX+4, ly+leafSwayY+6, lsize*0.9, lsize*0.75, 0, 0, Math.PI*2);
+        fctx.fill();
+
+        // Main canopy
+        const leafGrad = fctx.createRadialGradient(lx+leafSwayX-lsize*0.2, ly+leafSwayY-lsize*0.2, 0, lx+leafSwayX, ly+leafSwayY, lsize);
+        leafGrad.addColorStop(0, colors.leafAlt);
+        leafGrad.addColorStop(0.6, colors.leaf);
+        leafGrad.addColorStop(1, 'rgba(10,20,10,0.6)');
+        fctx.fillStyle = leafGrad;
+        fctx.beginPath();
+        fctx.ellipse(lx+leafSwayX, ly+leafSwayY, lsize, lsize*0.82, 0, 0, Math.PI*2);
+        fctx.fill();
+
+        fctx.restore();
+      }
+    });
+  });
+
+  // Ground
+  const groundGrad = fctx.createLinearGradient(0, fc.height * 0.88, 0, fc.height);
+  groundGrad.addColorStop(0, '#0a1a08');
+  groundGrad.addColorStop(0.5, '#0d2010');
+  groundGrad.addColorStop(1, '#060e06');
+  fctx.fillStyle = groundGrad;
+  fctx.beginPath();
+  fctx.moveTo(0, fc.height * 0.92);
+  fctx.quadraticCurveTo(fc.width * 0.25, fc.height * 0.89, fc.width * 0.5, fc.height * 0.91);
+  fctx.quadraticCurveTo(fc.width * 0.75, fc.height * 0.93, fc.width, fc.height * 0.90);
+  fctx.lineTo(fc.width, fc.height);
+  fctx.lineTo(0, fc.height);
+  fctx.closePath();
+  fctx.fill();
+
+  // Mist
+  mistLayers.forEach(m => {
+    m.offset += m.speed;
+    const mx = ((m.offset * fc.width * 0.3) % (fc.width * 1.5)) - fc.width * 0.25;
+    const mg = fctx.createLinearGradient(0, fc.height * m.y - 30, 0, fc.height * m.y + 60);
+    mg.addColorStop(0, 'transparent');
+    mg.addColorStop(0.4, `rgba(180,230,180,${m.alpha})`);
+    mg.addColorStop(1, 'transparent');
+    fctx.save();
+    fctx.translate(mx, 0);
+    fctx.fillStyle = mg;
+    fctx.beginPath();
+    fctx.ellipse(fc.width * 0.5, fc.height * m.y, fc.width * 0.9, 50, 0, 0, Math.PI*2);
+    fctx.fill();
+    fctx.restore();
+  });
+
+  // Fireflies
+  fireflies.forEach(ff => {
+    ff.phase += ff.speed;
+    ff.x += ff.drift;
+    if (ff.x < 0) ff.x = 1;
+    if (ff.x > 1) ff.x = 0;
+    const glow = 0.5 + 0.5 * Math.sin(ff.phase);
+    const fx = ff.x * fc.width;
+    const fy = ff.y * fc.height;
+    const fg = fctx.createRadialGradient(fx, fy, 0, fx, fy, ff.r * 8);
+    fg.addColorStop(0, `rgba(180,255,160,${glow * 0.9})`);
+    fg.addColorStop(0.4, `rgba(100,220,100,${glow * 0.4})`);
+    fg.addColorStop(1, 'transparent');
+    fctx.save();
+    fctx.globalAlpha = glow * 0.8;
+    fctx.fillStyle = fg;
+    fctx.beginPath();
+    fctx.arc(fx, fy, ff.r * 8, 0, Math.PI*2);
+    fctx.fill();
+    fctx.fillStyle = `rgba(220,255,200,${glow})`;
+    fctx.beginPath();
+    fctx.arc(fx, fy, ff.r, 0, Math.PI*2);
+    fctx.fill();
+    fctx.restore();
+  });
+
+  requestAnimationFrame(drawForest);
+}
+drawForest();
+
+// ══════════ MONKEY HERO CANVAS ══════════
+const mc = document.getElementById('monkeyCanvas');
+const mctx = mc.getContext('2d');
+
+let mTime = 0;
+let tailAngle = 0;
+let tailDir = 1;
+let eyeBlink = 0;
+let blinkTimer = 0;
+
+function drawMonkey() {
+  mTime += 0.04;
+  mctx.clearRect(0, 0, mc.width, mc.height);
+
+  // Background circle — forest scene
+  const bgGrad = mctx.createRadialGradient(160, 160, 20, 160, 160, 160);
+  bgGrad.addColorStop(0, '#1a3a1a');
+  bgGrad.addColorStop(0.6, '#0f2210');
+  bgGrad.addColorStop(1, '#070e07');
+  mctx.fillStyle = bgGrad;
+  mctx.beginPath();
+  mctx.arc(160, 160, 155, 0, Math.PI*2);
+  mctx.fill();
+
+  // Mini trees in background
+  for (let i = 0; i < 5; i++) {
+    const tx = 40 + i * 60;
+    const th = 60 + i * 12;
+    mctx.fillStyle = `rgba(30,${50+i*8},30,0.6)`;
+    mctx.beginPath();
+    mctx.moveTo(tx, 280); mctx.lineTo(tx-18, 280-th); mctx.lineTo(tx+18, 280-th);
+    mctx.closePath(); mctx.fill();
+    mctx.beginPath();
+    mctx.moveTo(tx, 260); mctx.lineTo(tx-22, 260-th*0.7); mctx.lineTo(tx+22, 260-th*0.7);
+    mctx.closePath(); mctx.fill();
+  }
+
+  // Ground
+  const gGrad = mctx.createLinearGradient(0, 255, 0, 320);
+  gGrad.addColorStop(0, '#1a3a10');
+  gGrad.addColorStop(1, '#0a1a08');
+  mctx.fillStyle = gGrad;
+  mctx.beginPath();
+  mctx.ellipse(160, 280, 130, 30, 0, 0, Math.PI*2);
+  mctx.fill();
+
+  // Branch
+  const branchSway = Math.sin(mTime * 0.7) * 3;
+  mctx.save();
+  mctx.strokeStyle = '#5c3a1e';
+  mctx.lineWidth = 18;
+  mctx.lineCap = 'round';
+  mctx.beginPath();
+  mctx.moveTo(-10, 140 + branchSway);
+  mctx.quadraticCurveTo(100, 135 + branchSway, 240, 145 + branchSway);
+  mctx.stroke();
+  mctx.strokeStyle = '#8b5e3c';
+  mctx.lineWidth = 10;
+  mctx.stroke();
+  // Bark texture lines
+  mctx.strokeStyle = 'rgba(40,20,8,0.4)';
+  mctx.lineWidth = 2;
+  for (let b = 0; b < 5; b++) {
+    mctx.beginPath();
+    mctx.moveTo(30 + b*40, 148 + branchSway);
+    mctx.lineTo(30 + b*40 + 15, 140 + branchSway);
+    mctx.stroke();
+  }
+  mctx.restore();
+
+  // ─ Monkey body ─
+  const bodyY = 145 + branchSway + Math.sin(mTime) * 3;
+  const bodyX = 155;
+
+  // Tail (animated)
+  tailAngle += 0.04 * tailDir;
+  if (Math.abs(tailAngle) > 0.7) tailDir *= -1;
+  mctx.save();
+  mctx.translate(bodyX + 18, bodyY + 35);
+  mctx.strokeStyle = '#c4874a';
+  mctx.lineWidth = 7;
+  mctx.lineCap = 'round';
+  mctx.beginPath();
+  const t1x = Math.sin(tailAngle) * 40;
+  const t1y = 30 + Math.cos(tailAngle) * 10;
+  const t2x = Math.sin(tailAngle + 0.5) * 60;
+  const t2y = 60;
+  mctx.moveTo(0, 0);
+  mctx.bezierCurveTo(t1x, t1y, t2x, t2y, t2x + 10, t2y - 15);
+  mctx.stroke();
+  mctx.restore();
+
+  // Body
+  const bodyGrad = mctx.createRadialGradient(bodyX - 6, bodyY + 15, 4, bodyX, bodyY + 20, 32);
+  bodyGrad.addColorStop(0, '#d4944e');
+  bodyGrad.addColorStop(0.5, '#c4874a');
+  bodyGrad.addColorStop(1, '#8a5c2e');
+  mctx.fillStyle = bodyGrad;
+  mctx.beginPath();
+  mctx.ellipse(bodyX, bodyY + 22, 28, 35, 0, 0, Math.PI*2);
+  mctx.fill();
+
+  // Belly
+  mctx.fillStyle = 'rgba(232,184,122,0.6)';
+  mctx.beginPath();
+  mctx.ellipse(bodyX, bodyY + 28, 16, 20, 0, 0, Math.PI*2);
+  mctx.fill();
+
+  // Arms — hanging
+  const armSwing = Math.sin(mTime * 0.8) * 8;
+  // Left arm
+  mctx.strokeStyle = '#c4874a';
+  mctx.lineWidth = 9;
+  mctx.lineCap = 'round';
+  mctx.beginPath();
+  mctx.moveTo(bodyX - 24, bodyY + 10);
+  mctx.quadraticCurveTo(bodyX - 50, bodyY + 20 + armSwing, bodyX - 46, bodyY - 8);
+  mctx.stroke();
+  // Grip hand left
+  mctx.fillStyle = '#8a5c2e';
+  mctx.beginPath(); mctx.arc(bodyX - 46, bodyY - 10, 8, 0, Math.PI*2); mctx.fill();
+  // Right arm
+  mctx.beginPath();
+  mctx.moveTo(bodyX + 24, bodyY + 10);
+  mctx.quadraticCurveTo(bodyX + 50, bodyY + 20 - armSwing, bodyX + 46, bodyY - 8);
+  mctx.stroke();
+  // Grip hand right
+  mctx.fillStyle = '#8a5c2e';
+  mctx.beginPath(); mctx.arc(bodyX + 46, bodyY - 10, 8, 0, Math.PI*2); mctx.fill();
+
+  // Legs
+  mctx.strokeStyle = '#b07a3a';
+  mctx.lineWidth = 8;
+  mctx.lineCap = 'round';
+  // Left leg
+  mctx.beginPath();
+  mctx.moveTo(bodyX - 14, bodyY + 54);
+  mctx.quadraticCurveTo(bodyX - 30, bodyY + 75, bodyX - 25, bodyY + 90);
+  mctx.stroke();
+  // Right leg
+  mctx.beginPath();
+  mctx.moveTo(bodyX + 14, bodyY + 54);
+  mctx.quadraticCurveTo(bodyX + 30, bodyY + 75, bodyX + 25, bodyY + 90);
+  mctx.stroke();
+
+  // Head
+  const headY = bodyY - 18;
+  const headGrad = mctx.createRadialGradient(bodyX - 6, headY - 5, 4, bodyX, headY, 24);
+  headGrad.addColorStop(0, '#d8984e');
+  headGrad.addColorStop(1, '#9a6030');
+  mctx.fillStyle = headGrad;
+  mctx.beginPath();
+  mctx.arc(bodyX, headY, 26, 0, Math.PI*2);
+  mctx.fill();
+
+  // Ears
+  mctx.fillStyle = '#c4874a';
+  mctx.beginPath(); mctx.ellipse(bodyX - 26, headY + 2, 9, 10, -0.3, 0, Math.PI*2); mctx.fill();
+  mctx.beginPath(); mctx.ellipse(bodyX + 26, headY + 2, 9, 10, 0.3, 0, Math.PI*2); mctx.fill();
+  mctx.fillStyle = '#e8b87a';
+  mctx.beginPath(); mctx.ellipse(bodyX - 26, headY + 2, 5, 6, -0.3, 0, Math.PI*2); mctx.fill();
+  mctx.beginPath(); mctx.ellipse(bodyX + 26, headY + 2, 5, 6, 0.3, 0, Math.PI*2); mctx.fill();
+
+  // Face patch
+  mctx.fillStyle = '#e8c080';
+  mctx.beginPath();
+  mctx.ellipse(bodyX, headY + 6, 15, 14, 0, 0, Math.PI*2);
+  mctx.fill();
+
+  // Eyes
+  blinkTimer++;
+  if (blinkTimer > 120) { eyeBlink = 1; }
+  if (blinkTimer > 126) { eyeBlink = 0; blinkTimer = 0; }
+  const eyeH = eyeBlink ? 1 : 6;
+  // Left eye
+  mctx.fillStyle = '#1a0a00';
+  mctx.beginPath();
+  mctx.ellipse(bodyX - 9, headY - 2, 5, eyeH, 0, 0, Math.PI*2);
+  mctx.fill();
+  if (!eyeBlink) {
+    mctx.fillStyle = 'white';
+    mctx.beginPath(); mctx.arc(bodyX - 7, headY - 4, 2, 0, Math.PI*2); mctx.fill();
+  }
+  // Right eye
+  mctx.fillStyle = '#1a0a00';
+  mctx.beginPath();
+  mctx.ellipse(bodyX + 9, headY - 2, 5, eyeH, 0, 0, Math.PI*2);
+  mctx.fill();
+  if (!eyeBlink) {
+    mctx.fillStyle = 'white';
+    mctx.beginPath(); mctx.arc(bodyX + 11, headY - 4, 2, 0, Math.PI*2); mctx.fill();
+  }
+
+  // Nose
+  mctx.fillStyle = '#6a3a10';
+  mctx.beginPath(); mctx.arc(bodyX - 3, headY + 5, 2.5, 0, Math.PI*2); mctx.fill();
+  mctx.beginPath(); mctx.arc(bodyX + 3, headY + 5, 2.5, 0, Math.PI*2); mctx.fill();
+  mctx.fillStyle = '#3a1a06';
+  mctx.fillRect(bodyX - 1, headY + 3, 2, 4);
+
+  // Smile
+  const smileWiggle = Math.sin(mTime * 2) * 1;
+  mctx.strokeStyle = '#5c3010';
+  mctx.lineWidth = 2;
+  mctx.lineCap = 'round';
+  mctx.beginPath();
+  mctx.moveTo(bodyX - 8, headY + 12 + smileWiggle);
+  mctx.quadraticCurveTo(bodyX, headY + 18 + smileWiggle, bodyX + 8, headY + 12 + smileWiggle);
+  mctx.stroke();
+
+  // Leaves floating around monkey
+  for (let i = 0; i < 3; i++) {
+    const la = mTime * 0.6 + (i * Math.PI * 2 / 3);
+    const lx = bodyX + Math.cos(la) * (55 + i * 12);
+    const ly = bodyY + Math.sin(la * 0.7) * 25;
+    mctx.save();
+    mctx.translate(lx, ly);
+    mctx.rotate(la * 2);
+    mctx.fillStyle = `rgba(${60 + i*20},${160 + i*20},${60 + i*10},0.7)`;
+    mctx.beginPath();
+    mctx.ellipse(0, 0, 7, 4, 0, 0, Math.PI*2);
+    mctx.fill();
+    mctx.restore();
+  }
+
+  // Small rain drops occasionally
+  const rainAlpha = Math.max(0, Math.sin(mTime * 0.2) * 0.3);
+  if (rainAlpha > 0.05) {
+    mctx.strokeStyle = `rgba(180,230,255,${rainAlpha})`;
+    mctx.lineWidth = 1;
+    for (let i = 0; i < 15; i++) {
+      const rx = 30 + ((i * 73 + mTime * 80) % 260);
+      const ry = (mTime * 100 * (0.5 + i * 0.03)) % 310;
+      mctx.beginPath();
+      mctx.moveTo(rx, ry);
+      mctx.lineTo(rx - 1, ry + 8);
+      mctx.stroke();
+    }
+  }
+
+  requestAnimationFrame(drawMonkey);
+}
+drawMonkey();
+
+// ══════════ FALLING LEAVES ══════════
+const leafEmojis = ['🍃','🍂','🌿','🍁'];
+const lc = document.getElementById('leavesContainer');
+
+function spawnLeaf() {
+  const leaf = document.createElement('div');
+  leaf.className = 'leaf-fall';
+  leaf.textContent = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
+  const x = Math.random() * 100;
+  const dur = 6 + Math.random() * 8;
+  const sway = (Math.random() - 0.5) * 200;
+  leaf.style.cssText = `
+    left: ${x}%;
+    font-size: ${0.7 + Math.random() * 0.8}rem;
+    animation-duration: ${dur}s;
+    animation-delay: ${Math.random() * 4}s;
+    --sway: ${sway}px;
+  `;
+  lc.appendChild(leaf);
+  setTimeout(() => leaf.remove(), (dur + 4) * 1000);
+}
+setInterval(spawnLeaf, 1200);
+// Initial burst
+for (let i = 0; i < 8; i++) setTimeout(spawnLeaf, i * 300);
+
+// ══════════ SCROLL REVEAL ══════════
+const cards = document.querySelectorAll('[data-card]');
+const cardObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); cardObs.unobserve(e.target); } });
+}, { threshold: 0.15 });
+cards.forEach(c => cardObs.observe(c));
+
+// ══════════ PROGRESS BAR ══════════
+const pb = document.getElementById('progressBar');
+window.addEventListener('scroll', () => {
+  pb.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+});
+</script>
+</body>
+</html>

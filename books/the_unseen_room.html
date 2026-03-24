@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Unseen Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink: #0d0d12;
+    --deep: #111118;
+    --surface: #16161f;
+    --card: #1c1c28;
+    --muted: #2a2a3a;
+    --border: #2e2e42;
+    --fog: rgba(180,160,255,0.06);
+    --glow: #7c6aff;
+    --glow2: #c47bff;
+    --gold: #c9a84c;
+    --gold2: #e8c96a;
+    --text: #d8d4e8;
+    --text-dim: #8a8499;
+    --text-bright: #f0ecff;
+    --red-cold: #a04060;
+    --ice: #88b8d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.9;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 70%, rgba(80,40,120,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 30%, rgba(60,20,80,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(20,40,80,0.10) 0%, transparent 60%),
+      var(--ink);
+  }
+
+  .streetlight {
+    position: absolute;
+    width: 2px;
+    height: 40vh;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
+    animation: flicker 4s ease-in-out infinite;
+  }
+  .streetlight::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .sl1 { left: 12%; top: 0; animation-delay: 0s; }
+  .sl2 { right: 12%; top: 0; animation-delay: 1.5s; }
+  .sl3 { left: 40%; top: 0; height: 25vh; animation-delay: 0.8s; opacity: 0.5; }
+
+  @keyframes flicker {
+    0%,100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.3; }
+    94% { opacity: 1; }
+    96% { opacity: 0.5; }
+    97% { opacity: 1; }
+  }
+
+  /* floating particles */
+  .particles { position: absolute; inset: 0; pointer-events: none; }
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.4);
+    animation: drift var(--dur, 8s) ease-in-out var(--delay, 0s) infinite alternate;
+  }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); opacity: 0.2; }
+    to   { transform: translate(var(--tx,20px), var(--ty,-40px)) scale(1.5); opacity: 0.8; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.4s forwards;
+    position: relative;
+  }
+
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2.2rem, 8vw, 5.5rem);
+    font-weight: 700;
+    color: var(--text-bright);
+    line-height: 1.1;
+    margin: 1rem 0 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.7s forwards;
+    position: relative;
+    text-shadow: 0 0 60px rgba(124,106,255,0.3), 0 2px 40px rgba(0,0,0,0.8);
+  }
+
+  .hero-title span {
+    background: linear-gradient(135deg, var(--gold), var(--gold2), var(--glow2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem auto;
+    width: min(400px, 80vw);
+    opacity: 0;
+    animation: fadeUp 1s ease 1s forwards;
+    position: relative;
+  }
+  .hero-divider::before, .hero-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .hero-divider-gem {
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    box-shadow: 0 0 12px var(--gold);
+    animation: pulse-gem 2s ease-in-out infinite;
+  }
+  @keyframes pulse-gem {
+    0%,100% { box-shadow: 0 0 8px var(--gold); }
+    50% { box-shadow: 0 0 20px var(--gold2), 0 0 40px rgba(201,168,76,0.3); }
+  }
+
+  .hero-tagline {
+    font-style: italic;
+    font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+    color: var(--text-dim);
+    max-width: 480px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.2s forwards;
+    position: relative;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 2s forwards;
+  }
+  .scroll-hint span {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .scroll-arrow {
+    width: 20px;
+    height: 20px;
+    border-right: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+    transform: rotate(45deg);
+    animation: bounce 2s ease-in-out infinite;
+    opacity: 0.6;
+  }
+  @keyframes bounce {
+    0%,100% { transform: rotate(45deg) translateY(0); }
+    50% { transform: rotate(45deg) translateY(6px); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── CHAPTER SYSTEM ── */
+  .chapters-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,13,18,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+  }
+  .chapters-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .chapters-inner::-webkit-scrollbar { display: none; }
+  .chapter-btn {
+    flex-shrink: 0;
+    padding: 1rem 1.2rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s, border-color 0.3s;
+    border-bottom: 2px solid transparent;
+    position: relative;
+  }
+  .chapter-btn:hover, .chapter-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── STORY WRAPPER ── */
+  .story-wrapper {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 clamp(1.2rem, 5vw, 4rem);
+  }
+
+  /* ── CHAPTER BLOCKS ── */
+  .chapter {
+    padding: 5rem 0 2rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .chapter.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .chapter-number {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 3rem;
+    font-weight: 400;
+    color: var(--border);
+    line-height: 1;
+    flex-shrink: 0;
+    text-shadow: 0 0 30px rgba(124,106,255,0.15);
+  }
+  .chapter-info { flex: 1; }
+  .chapter-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .chapter-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-weight: 400;
+    color: var(--text-bright);
+  }
+  .chapter-line {
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+
+  /* ── PROSE ── */
+  .prose p {
+    margin-bottom: 1.8rem;
+    color: var(--text);
+    font-weight: 300;
+  }
+  .prose p:first-child::first-letter {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 3.8rem;
+    font-weight: 700;
+    float: left;
+    line-height: 0.75;
+    margin: 0.1em 0.12em 0 0;
+    background: linear-gradient(135deg, var(--gold), var(--glow2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── DIALOGUE WIDGET ── */
+  .message-widget {
+    margin: 2.5rem 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+    animation: none;
+  }
+  .message-widget-bar {
+    background: var(--muted);
+    padding: 0.7rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .msg-label {
+    margin-left: auto;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .messages-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
+  .msg {
+    max-width: 75%;
+    padding: 0.7rem 1.1rem;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .msg.show { opacity: 1; transform: translateY(0); }
+  .msg.sent {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #3a2a5a, #2a1a4a);
+    border-bottom-right-radius: 4px;
+    color: #c8b8e8;
+    border: 1px solid rgba(124,106,255,0.2);
+  }
+  .msg.received {
+    align-self: flex-start;
+    background: var(--surface);
+    border-bottom-left-radius: 4px;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    font-style: italic;
+    opacity: 0.5 !important;
+  }
+  .msg.warning {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #3a1020, #1a0810);
+    border-bottom-right-radius: 4px;
+    color: #e88899;
+    border: 1px solid rgba(160,64,96,0.3);
+  }
+
+  /* ── QUOTE WIDGET ── */
+  .quote-widget {
+    margin: 2.5rem 0;
+    padding: 2rem 2rem 2rem 3rem;
+    border-left: 3px solid var(--gold);
+    background: linear-gradient(to right, rgba(201,168,76,0.05), transparent);
+    border-radius: 0 12px 12px 0;
+    position: relative;
+  }
+  .quote-widget::before {
+    content: '\201C';
+    position: absolute;
+    left: -0.1em;
+    top: -0.3em;
+    font-size: 5rem;
+    font-family: Georgia, serif;
+    color: var(--gold);
+    opacity: 0.3;
+    line-height: 1;
+  }
+  .quote-widget p {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-style: italic;
+    color: var(--text-bright);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .quote-widget cite {
+    display: block;
+    margin-top: 0.8rem;
+    font-size: 0.75rem;
+    font-family: 'Raleway', sans-serif;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  /* ── COLD ROOM WIDGET ── */
+  .room-widget {
+    margin: 2.5rem 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+  .room-scene {
+    height: 180px;
+    background: var(--deep);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .room-scene::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(80,120,180,0.08) 0%, transparent 70%);
+  }
+  /* Mist effect */
+  .mist {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 60px;
+    background: radial-gradient(ellipse, rgba(136,184,216,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: mist-float 3s ease-in-out infinite alternate;
+    filter: blur(8px);
+  }
+  .mist2 {
+    width: 80px;
+    height: 40px;
+    left: 35%;
+    animation-delay: 1s;
+    animation-duration: 4s;
+    opacity: 0.6;
+  }
+  .mist3 {
+    width: 60px;
+    height: 30px;
+    left: 60%;
+    animation-delay: 0.5s;
+    animation-duration: 3.5s;
+    opacity: 0.4;
+  }
+  @keyframes mist-float {
+    from { transform: translateX(-50%) translateY(0) scale(1); opacity: 0.6; }
+    to   { transform: translateX(-50%) translateY(-20px) scale(1.3); opacity: 1; }
+  }
+  .ice-cube {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, rgba(136,184,216,0.6), rgba(180,220,255,0.3));
+    border: 1px solid rgba(136,184,216,0.5);
+    border-radius: 6px;
+    position: absolute;
+    transform: rotate(15deg);
+    box-shadow: 0 0 20px rgba(136,184,216,0.4), inset 0 0 10px rgba(255,255,255,0.1);
+    animation: ice-glow 2s ease-in-out infinite alternate;
+    top: 50%;
+    left: 50%;
+    margin-top: -20px;
+    margin-left: -20px;
+  }
+  @keyframes ice-glow {
+    from { box-shadow: 0 0 20px rgba(136,184,216,0.4); }
+    to   { box-shadow: 0 0 40px rgba(136,184,216,0.7), 0 0 60px rgba(136,184,216,0.2); }
+  }
+  .room-caption {
+    padding: 1.2rem 1.5rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ice);
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── RECKONING WIDGET ── */
+  .reckoning-widget {
+    margin: 2.5rem 0;
+    background: linear-gradient(135deg, rgba(30,10,20,0.8), rgba(20,20,35,0.8));
+    border: 1px solid rgba(160,64,96,0.3);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .reckoning-widget::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(160,64,96,0.08) 0%, transparent 60%);
+  }
+  .reckoning-lines { position: relative; }
+  .reck-line {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: var(--text);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(160,64,96,0.15);
+    font-style: italic;
+    font-weight: 300;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reck-line:last-child { border-bottom: none; }
+  .reck-line.reveal { opacity: 1; transform: translateX(0); }
+  .reck-line strong {
+    color: var(--red-cold);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* ── REFLECTION WIDGET ── */
+  .reflection-widget {
+    margin: 3rem 0;
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .reflection-widget::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(124,106,255,0.08) 0%, transparent 60%);
+  }
+  .reflection-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+    filter: drop-shadow(0 0 12px rgba(201,168,76,0.4));
+  }
+  .reflection-widget blockquote {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-bright);
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ── CHAPTER SEPARATOR ── */
+  .chapter-sep {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0 1rem;
+    gap: 1rem;
+    opacity: 0.4;
+  }
+  .sep-line { flex: 1; height: 1px; background: var(--border); }
+  .sep-glyph { color: var(--gold); font-size: 0.8rem; letter-spacing: 0.5em; }
+
+  /* ── ENDING CARD ── */
+  .ending-card {
+    margin: 4rem 0 6rem;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(40,20,70,0.6) 0%, transparent 70%),
+                var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ending-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.01) 40px,
+      rgba(255,255,255,0.01) 41px
+    );
+  }
+  .ending-eyebrow {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    display: block;
+    position: relative;
+  }
+  .ending-text {
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-bright);
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    position: relative;
+  }
+  .ending-final {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+    letter-spacing: 0.15em;
+    background: linear-gradient(135deg, var(--gold), var(--glow2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .footer-inner {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .footer-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+  .footer-note {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--gold), var(--glow2), var(--glow));
+    z-index: 9998;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 8px var(--gold);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .chapter-header { flex-wrap: wrap; }
+    .chapter-number { font-size: 2rem; }
+    .msg { max-width: 90%; }
+    .prose p:first-child::first-letter { font-size: 2.8rem; }
+    .room-scene { height: 140px; }
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--deep); }
+  ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+  /* Text selection */
+  ::selection { background: rgba(201,168,76,0.2); color: var(--text-bright); }
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar" style="width:0%"></div>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Streetlights -->
+  <div class="streetlight sl1"></div>
+  <div class="streetlight sl2"></div>
+  <div class="streetlight sl3"></div>
+
+  <!-- Floating particles -->
+  <div class="particles" id="particles"></div>
+
+  <p class="hero-eyebrow">A Story of Shadows &amp; Justice</p>
+
+  <h1 class="hero-title">The <span>Unseen</span> Room</h1>
+
+  <div class="hero-divider">
+    <div class="hero-divider-gem"></div>
+  </div>
+
+  <p class="hero-tagline">
+    Some walk in daylight, celebrated and seen.<br>
+    Others walk in shadow — and make things right.
+  </p>
+
+  <div class="scroll-hint">
+    <span>Begin Reading</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="chapters-nav" role="navigation" aria-label="Chapters">
+  <div class="chapters-inner">
+    <button class="chapter-btn active" onclick="scrollTo('ch1')">I · The Night Walk</button>
+    <button class="chapter-btn" onclick="scrollTo('ch2')">II · The Messages</button>
+    <button class="chapter-btn" onclick="scrollTo('ch3')">III · The Warning</button>
+    <button class="chapter-btn" onclick="scrollTo('ch4')">IV · The Return</button>
+    <button class="chapter-btn" onclick="scrollTo('ch5')">V · The Room</button>
+    <button class="chapter-btn" onclick="scrollTo('ch6')">VI · The Reckoning</button>
+    <button class="chapter-btn" onclick="scrollTo('ch7')">VII · The Silence</button>
+    <button class="chapter-btn" onclick="scrollTo('ch8')">VIII · Aftermath</button>
+  </div>
+</nav>
+
+<!-- ══════════ STORY ══════════ -->
+<main class="story-wrapper">
+
+  <!-- CHAPTER I -->
+  <article class="chapter" id="ch1">
+    <div class="chapter-header">
+      <div class="chapter-number">I</div>
+      <div class="chapter-info">
+        <span class="chapter-label">Chapter One</span>
+        <h2 class="chapter-title">The Night Walk</h2>
+      </div>
+      <div class="chapter-line"></div>
+    </div>
+    <div class="prose">
+      <p>It was one of those nights that felt like a soft whisper — still, peaceful, and almost unreal. The sky was calm, painted in deep blues and quiet stars. The streets were mostly empty, except for the scattered flicker of streetlights and the faint glow of mobile screens lighting up faces here and there. The world had finally slowed down for a while, and Lucifer welcomed it.</p>
+      <p>He often walked at night when the noise faded — not the noise from outside, but the one inside his head. Night walks were his escape, his way to breathe without pressure.</p>
+    </div>
+  </article>
+
+  <div class="chapter-sep"><div class="sep-line"></div><span class="sep-glyph">✦</span><div class="sep-line"></div></div>
+
+  <!-- CHAPTER II -->
+  <article class="chapter" id="ch2">
+    <div class="chapter-header">
+      <div class="chapter-number">II</div>
+      <div class="chapter-info">
+        <span class="chapter-label">Chapter Two</span>
+        <h2 class="chapter-title">The Messages</h2>
+      </div>
+      <div class="chapter-line"></div>
+    </div>
+    <div class="prose">
+      <p>As he turned the corner near an old bench tucked under a flickering lamp, his eyes caught someone sitting alone. The guy was slouched over, eyes glued to his phone, fingers typing fast. The more he watched, the more he noticed the shift in the guy's face — frustration, then urgency, then something almost bitter.</p>
+    </div>
+
+    <!-- Message Widget -->
+    <div class="message-widget" id="msgWidget">
+      <div class="message-widget-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="msg-label">Intercepted — 11:47 PM</span>
+      </div>
+      <div class="messages-body" id="msgBody">
+        <div class="msg sent">Why are you ignoring me?</div>
+        <div class="msg received">— (no reply) —</div>
+        <div class="msg sent">I know you saw the message.</div>
+        <div class="msg sent">Just talk to me, why are you being like this?</div>
+        <div class="msg warning">If you don't reply, I'll come see you.</div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>Lucifer's eyes narrowed slightly. His body remained still, but inside — something shifted. He didn't know the girl on the other side of that chat. But he knew exactly how those messages felt. He'd seen the way people carry that kind of invisible pressure.</p>
+      <p>This wasn't just texting. This was someone trying to control another person's peace.</p>
+    </div>
+  </article>
+
+  <div class="chapter-sep"><div class="sep-line"></div><span class="sep-glyph">✦</span><div class="sep-line"></div></div>
+
+  <!-- CHAPTER III -->
+  <article class="chapter" id="ch3">
+    <div class="chapter-header">
+      <div class="chapter-number">III</div>
+      <div class="chapter-info">
+        <span class="chapter-label">Chapter Three</span>
+        <h2 class="chapter-title">The Warning</h2>
+      </div>
+      <div class="chapter-line"></div>
+    </div>
+    <div class="prose">
+      <p>He could've walked past. He could've told himself it wasn't his business. But his gut wouldn't let him. So he walked straight toward the guy, quiet but firm. His boots tapped against the pavement — calm, measured.</p>
+      <p>The guy noticed him. Looked up, startled at first. Confused, then defensive. Lucifer's tone didn't change. It didn't need to.</p>
+    </div>
+
+    <div class="quote-widget">
+      <p>"You may think you're just texting. You may think it's harmless. But it's not. That girl? She's not playing games. She's uncomfortable. She's scared."</p>
+      <cite>— Lucifer, beneath the streetlamp</cite>
+    </div>
+
+    <div class="prose">
+      <p>"This is your only warning," he said, even calmer now. "Don't message her again. Don't bother her. Don't do this to any girl — ever." He stood there for a few seconds longer — not as a threat, but as a presence. A reminder that there are people who still see, who still speak, who don't scroll past cruelty like it's entertainment.</p>
+      <p>Then he turned and walked away. Not because he was done, but because his words were meant to stay long after he left.</p>
+    </div>
+  </article>
+
+  <div class="chapter-sep"><div class="sep-line"></div><span class="sep-glyph">✦</span><div class="sep-line"></div></div>
+
+  <!-- CHAPTER IV -->
+  <article class="chapter" id="ch4">
+    <div class="chapter-header">
+      <div class="chapter-number">IV</div>
+      <div class="chapter-info">
+        <span class="chapter-label">Chapter Four</span>
+        <h2 class="chapter-title">The Return</h2>
+      </div>
+      <div class="chapter-line"></div>
+    </div>
+    <div class="prose">
+      <p>A few nights had passed since the warning. Lucifer kept walking as usual, eyes open not just to the road, but to the patterns of people, the signs in their body language, the unsaid things that hung heavy between interactions. He wasn't hunting. He wasn't paranoid. But he was aware.</p>
+      <p>That awareness paid off when he saw a familiar shape under a bus stop light. It was the same man. This time, there was no screen hiding his actions. He was cornering a girl in person. Standing too close. Talking too fast. The girl's posture told the story: she shifted uncomfortably, kept glancing at the street, trying to politely escape without escalating.</p>
+      <p>Lucifer watched, standing still across the street. He had seen enough. There was no misunderstanding this time. The man hadn't just ignored the warning — he'd mocked it.</p>
+    </div>
+
+    <div class="reflection-widget">
+      <span class="reflection-icon">🌑</span>
+      <blockquote>
+        "Lucifer didn't feel rage. What settled in him was something colder, more focused. The kind of resolve that doesn't need shouting."
+      </blockquote>
+    </div>
+
+    <div class="prose">
+      <p>The girl eventually broke free and walked off quickly, pulling her phone out as if clinging to something safe. The man chuckled to himself, completely unaware that his game had finally crossed a line he couldn't walk back from.</p>
+      <p>And when the time felt right, the man simply vanished — no witnesses, no resistance, as if the night itself had swallowed him.</p>
+    </div>
+  </article>
+
+  <div class="chapter-sep"><div class="sep-line"></div><span class="sep-glyph">✦</span><div class="sep-line"></div></div>
+
+  <!-- CHAPTER V -->
+  <article class="chapter" id="ch5">
+    <div class="chapter-header">
+      <div class="chapter-number">V</div>
+      <div class="chapter-info">
+        <span class="chapter-label">Chapter Five</span>
+        <h2 class="chapter-title">The Unseen Room</h2>
+      </div>
+      <div class="chapter-line"></div>
+    </div>
+    <div class="prose">
+      <p>The room was real. It wasn't some fantasy dungeon or horror cliché. It was a place Lucifer had prepared long ago — not out of impulse, but from years of watching people like this slip through cracks. No one heard screams here, but it wasn't meant for pain. It was meant for silence. A space with no windows, no clock, no reflection.</p>
+    </div>
+
+    <!-- Cold Room Widget -->
+    <div class="room-widget">
+      <div class="room-scene">
+        <div class="mist"></div>
+        <div class="mist mist2"></div>
+        <div class="mist mist3"></div>
+        <div class="ice-cube"></div>
+      </div>
+      <div class="room-caption">— Silent. Windowless. Timeless. —</div>
+    </div>
+
+    <div class="prose">
+      <p>The man woke up on the floor, dazed, confused, then slowly scared. He shouted. No response. He banged on the wall. Nothing echoed. And when Lucifer finally entered, he didn't need to speak. His presence alone did what words could not.</p>
+      <p>Days passed in that space. Or maybe hours — time had no shape in the dark. No phone. No validation. No control. Just stillness. The man began to break slowly — not from fear, but from being alone with his own truth. His charm didn't work on shadows. His excuses had no audience. His mind, for the first time, was louder than his voice.</p>
+    </div>
+
+    <div class="quote-widget">
+      <p>"Why do you think you're here?"</p>
+      <cite>— Lucifer's first question, after the silence</cite>
+    </div>
+  </article>
+
+  <div class="chapter-sep"><div class="sep-line"></div><span class="sep-glyph">✦</span><div class="sep-line"></div></div>
+
+  <!-- CHAPTER VI -->
+  <article class="chapter" id="ch6">
+    <div class="chapter-header">
+      <div class="chapter-number">VI</div>
+      <div class="chapter-info">
+        <span class="chapter-label">Chapter Six</span>
+        <h2 class="chapter-title">The Reckoning</h2>
+      </div>
+      <div class="chapter-line"></div>
+    </div>
+    <div class="prose">
+      <p>Lucifer stepped forward, slowly, deliberately. No speeches. No lessons. Just clarity in his movement, in his decision. He had tried warning. He had tried silence. Now, he was done.</p>
+    </div>
+
+    <!-- Reckoning Widget -->
+    <div class="reckoning-widget" id="reckWidget">
+      <div class="reckoning-lines">
+        <div class="reck-line"><strong>"You made them feel trapped."</strong></div>
+        <div class="reck-line">You made them feel like their silence was weakness. That their fear was permission.</div>
+        <div class="reck-line"><strong>"You followed them. You texted them. You guilted them."</strong></div>
+        <div class="reck-line">You forced them to smile when they were crumbling inside.</div>
+        <div class="reck-line"><strong>"Now, you will feel every second of what you made them feel."</strong></div>
+        <div class="reck-line">The pressure. The fear. The inability to escape. The shame.</div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>Lucifer didn't rush. He had no reason to. This wasn't about revenge. This was about making the man understand what he had done — not through words, but through experience. Slowly. Deliberately.</p>
+    </div>
+  </article>
+
+  <div class="chapter-sep"><div class="sep-line"></div><span class="sep-glyph">✦</span><div class="sep-line"></div></div>
+
+  <!-- CHAPTER VII -->
+  <article class="chapter" id="ch7">
+    <div class="chapter-header">
+      <div class="chapter-number">VII</div>
+      <div class="chapter-info">
+        <span class="chapter-label">Chapter Seven</span>
+        <h2 class="chapter-title">The Silence After</h2>
+      </div>
+      <div class="chapter-line"></div>
+    </div>
+    <div class="prose">
+      <p>The man's eyes rolled back. His body jerked, once… then slowly stilled.</p>
+      <p>Lucifer stood up and took one long breath. Then he whispered, the final sentence like a seal to the punishment.</p>
+    </div>
+
+    <div class="quote-widget">
+      <p>"This was not revenge.<br>This was your own reflection.<br>And this is the end card…<br>for a sinner."</p>
+      <cite>— Lucifer's last words in the room</cite>
+    </div>
+
+    <div class="prose">
+      <p>He turned away from the chair, and without a backward glance, disappeared into the darkness — leaving behind only silence, the scent of burnt ice, and a lesson written in pain.</p>
+      <p>The door behind him closed on its own, and the darkness inside sealed everything away — the pain, the lesson, the story. Gone.</p>
+    </div>
+  </article>
+
+  <div class="chapter-sep"><div class="sep-line"></div><span class="sep-glyph">✦</span><div class="sep-line"></div></div>
+
+  <!-- CHAPTER VIII -->
+  <article class="chapter" id="ch8">
+    <div class="chapter-header">
+      <div class="chapter-number">VIII</div>
+      <div class="chapter-info">
+        <span class="chapter-label">Chapter Eight</span>
+        <h2 class="chapter-title">Aftermath</h2>
+      </div>
+      <div class="chapter-line"></div>
+    </div>
+    <div class="prose">
+      <p>Lucifer walked through quiet streets, footsteps steady and unhurried. A voice. A question. Was it too much? He didn't stop walking. But the thought lingered.</p>
+      <p>But then he remembered. Not the man. The girls. He remembered their silence, the messages they deleted, the fake smiles they gave to avoid confrontation. He remembered the nights they cried in secret — in the dark, alone, questioning their worth, fearing the next text, the next knock, the next guilt trap. Some couldn't sleep. Some had panic attacks. Some never told anyone.</p>
+      <p>And some? Some were gone. Taken by the slow poison of fear, stress, anxiety — all planted by someone who thought they had the right to chase what didn't belong to them.</p>
+    </div>
+
+    <div class="reflection-widget">
+      <span class="reflection-icon">⚖️</span>
+      <blockquote>
+        "This wasn't a reaction. This was a step.<br>A step someone had to take.<br>To break the cycle. To show the line exists."
+      </blockquote>
+    </div>
+
+    <div class="prose">
+      <p>He wasn't proud. He wasn't guilty either. He was clear. He had removed a rotting piece from the puzzle of society — a nonsensical human whose presence only created pain. And in doing so, Lucifer had given dozens — maybe more — a chance to breathe again. To feel safe. To walk a street without looking over their shoulder.</p>
+      <p>It wasn't justice by law. It was justice by presence.</p>
+    </div>
+
+    <!-- Ending Card -->
+    <div class="ending-card">
+      <span class="ending-eyebrow">The Final Lines</span>
+      <p class="ending-text">
+        "I am not chaos," he whispered to the darkness.<br>
+        "I am the answer after the silence."
+      </p>
+      <p class="ending-text" style="font-size: clamp(0.95rem, 2vw, 1.2rem); color: var(--text-dim);">
+        Without a sound, Lucifer took one final look at the streets — and then stepped back into the shadows. His presence faded, vanishing like ashes in the wind, absorbed by the night that birthed him, leaving behind no footprints, no trace — just a feeling.
+      </p>
+      <p class="ending-final">That someone had been there. That something had been made right.</p>
+    </div>
+  </article>
+
+</main>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-title">The Unseen Room</div>
+    <div class="footer-note">A story of shadows, silence, and the justice that walks between them</div>
+  </div>
+</footer>
+
+<script>
+// ── Generate Particles ──
+const container = document.getElementById('particles');
+for (let i = 0; i < 28; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.cssText = `
+    left: ${Math.random() * 100}%;
+    top: ${20 + Math.random() * 70}%;
+    --dur: ${6 + Math.random() * 8}s;
+    --delay: ${Math.random() * 4}s;
+    --tx: ${(Math.random() - 0.5) * 60}px;
+    --ty: ${-(10 + Math.random() * 60)}px;
+    opacity: ${0.1 + Math.random() * 0.4};
+  `;
+  container.appendChild(p);
+}
+
+// ── Progress Bar ──
+const bar = document.getElementById('progressBar');
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  bar.style.width = (window.scrollY / total * 100) + '%';
+});
+
+// ── Intersection Observer for chapter reveals ──
+const chapters = document.querySelectorAll('.chapter');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      // Activate nav btn
+      const id = e.target.id;
+      document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
+      const idx = [...chapters].indexOf(e.target);
+      const btn = document.querySelectorAll('.chapter-btn')[idx];
+      if (btn) btn.classList.add('active');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '-60px 0px 0px 0px' });
+chapters.forEach(c => obs.observe(c));
+
+// ── Stagger message widget ──
+const msgWidget = document.getElementById('msgWidget');
+const msgObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const msgs = e.target.querySelectorAll('.msg');
+      msgs.forEach((m, i) => setTimeout(() => m.classList.add('show'), 300 + i * 400));
+      msgObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+if (msgWidget) msgObs.observe(msgWidget);
+
+// ── Reckoning widget reveal ──
+const reckWidget = document.getElementById('reckWidget');
+const reckObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const lines = e.target.querySelectorAll('.reck-line');
+      lines.forEach((l, i) => setTimeout(() => l.classList.add('reveal'), i * 350));
+      reckObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.2 });
+if (reckWidget) reckObs.observe(reckWidget);
+
+// ── Chapter navigation ──
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    const offset = 60;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+}
+</script>
+</body>
+</html>

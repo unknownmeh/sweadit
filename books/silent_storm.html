@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Storm — The Invisible Shadow</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --parchment:   #f5ede0;
+  --cream:       #faf6ef;
+  --vellum:      #efe4d0;
+  --linen:       #e8dcc8;
+  --dust:        #d9cbb4;
+  --sepia:       #8b6f47;
+  --ink:         #2c1f0e;
+  --ink-light:   #4a3728;
+  --ink-faint:   #7a6250;
+  --rose:        #c9777a;
+  --rose-pale:   #e8b4b4;
+  --rose-blush:  #f4dada;
+  --sage:        #7a9e7e;
+  --sage-pale:   #c4d9c6;
+  --sage-mist:   #e4efe5;
+  --amber:       #c4832a;
+  --amber-pale:  #e8c48a;
+  --amber-glow:  #f5e8cc;
+  --blue-mist:   #8aa4b8;
+  --blue-pale:   #d4e2ec;
+  --storm-grey:  #6e7e8c;
+  --storm-pale:  #b8c8d4;
+}
+
+/* ══ DARK THEME ══ */
+body.dark-theme {
+  --parchment:   #1a1410;
+  --cream:       #110e0a;
+  --vellum:      #1e1812;
+  --linen:       #2a2218;
+  --dust:        #3a3028;
+  --sepia:       #c4966a;
+  --ink:         #f0e8dc;
+  --ink-light:   #d8ccbc;
+  --ink-faint:   #a89880;
+  --rose:        #e89090;
+  --rose-pale:   #7a4444;
+  --rose-blush:  #2a1a1a;
+  --sage:        #8ab890;
+  --sage-pale:   #3a5c3e;
+  --sage-mist:   #1a2e1c;
+  --amber:       #dda050;
+  --amber-pale:  #7a5020;
+  --amber-glow:  #2a1e0a;
+  --blue-mist:   #7090a8;
+  --blue-pale:   #243040;
+  --storm-grey:  #90a8bc;
+  --storm-pale:  #304050;
+}
+
+body.dark-theme .petal-card {
+  background: linear-gradient(145deg, #1e1812 0%, #16120e 100%);
+}
+body.dark-theme .quote-pull {
+  background: linear-gradient(135deg, rgba(80,30,30,0.3), rgba(20,16,12,0.6));
+}
+body.dark-theme .insight-panel {
+  background: linear-gradient(135deg, rgba(20,16,12,0.8), rgba(60,48,20,0.3));
+}
+body.dark-theme .scene-box {
+  background: linear-gradient(135deg, rgba(20,16,12,0.9), rgba(80,30,30,0.2));
+}
+body.dark-theme #hero { background: var(--cream); }
+
+/* ══ FLOATING NAV ══ */
+#float-nav {
+  position: fixed;
+  top: 1.2rem;
+  left: 1.2rem;
+  z-index: 9999;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.52rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: rgba(250,246,239,0.75);
+  border: 1px solid var(--linen);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+  text-decoration: none;
+}
+.nav-btn:hover {
+  background: rgba(250,246,239,0.95);
+  color: var(--ink);
+  border-color: var(--dust);
+  box-shadow: 0 4px 20px rgba(44,31,14,0.1);
+}
+.nav-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+body.dark-theme .nav-btn {
+  background: rgba(17,14,10,0.8);
+  border-color: var(--linen);
+  color: var(--ink-faint);
+}
+body.dark-theme .nav-btn:hover {
+  background: rgba(30,24,18,0.95);
+  color: var(--ink);
+}
+
+/* ══ THEME TOGGLE ══ */
+#theme-toggle {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.2rem;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.1rem;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.52rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: rgba(250,246,239,0.75);
+  border: 1px solid var(--linen);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#theme-toggle:hover {
+  background: rgba(250,246,239,0.95);
+  color: var(--ink);
+  border-color: var(--dust);
+  box-shadow: 0 4px 20px rgba(44,31,14,0.1);
+}
+body.dark-theme #theme-toggle {
+  background: rgba(17,14,10,0.8);
+  border-color: var(--linen);
+  color: var(--ink-faint);
+}
+body.dark-theme #theme-toggle:hover {
+  background: rgba(30,24,18,0.95);
+  color: var(--ink);
+}
+.toggle-icon { font-size: 0.9rem; transition: transform 0.4s ease; }
+#theme-toggle:hover .toggle-icon { transform: rotate(20deg); }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Lora', serif;
+  font-weight: 400;
+  line-height: 1.95;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23p)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.6;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--vellum); }
+::-webkit-scrollbar-thumb { background: var(--dust); border-radius: 4px; }
+
+/* ══ HERO ══ */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--cream);
+  padding: 2rem;
+  text-align: center;
+}
+
+.hero-wash {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.wash-1 {
+  width: clamp(300px,60vw,700px); height: clamp(300px,60vw,700px);
+  background: radial-gradient(ellipse, rgba(201,119,122,0.18) 0%, transparent 70%);
+  top: -10%; left: -10%;
+  animation: washDrift1 18s ease-in-out infinite alternate;
+}
+.wash-2 {
+  width: clamp(250px,50vw,600px); height: clamp(250px,50vw,600px);
+  background: radial-gradient(ellipse, rgba(122,158,126,0.14) 0%, transparent 70%);
+  bottom: -10%; right: -5%;
+  animation: washDrift2 22s ease-in-out infinite alternate;
+}
+.wash-3 {
+  width: clamp(200px,40vw,500px); height: clamp(200px,40vw,500px);
+  background: radial-gradient(ellipse, rgba(196,131,42,0.10) 0%, transparent 70%);
+  top: 30%; left: 40%;
+  animation: washDrift1 26s ease-in-out infinite alternate-reverse;
+}
+@keyframes washDrift1 {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(40px,30px) scale(1.08); }
+}
+@keyframes washDrift2 {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(-30px,-20px) scale(1.06); }
+}
+
+.ink-lines { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.ink-line {
+  position: absolute; top: 0; width: 1px;
+  background: linear-gradient(180deg, transparent 0%, rgba(44,31,14,0.06) 40%, transparent 100%);
+  animation: inkDrip linear infinite;
+}
+@keyframes inkDrip {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: top; opacity: 0; }
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 860px; }
+
+.eyebrow {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(0.55rem, 1.2vw, 0.72rem);
+  letter-spacing: 0.55em;
+  color: var(--sepia);
+  text-transform: uppercase;
+  margin-bottom: 2.2rem;
+  opacity: 0;
+  animation: riseIn 1.4s ease 0.4s forwards;
+}
+
+.hero-title {
+  font-family: 'IM Fell English', serif;
+  font-size: clamp(2.8rem, 9vw, 7.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  opacity: 0;
+  animation: riseIn 1.6s ease 0.9s forwards;
+}
+.hero-title em {
+  display: block;
+  font-style: italic;
+  font-size: 0.44em;
+  color: var(--ink-faint);
+  letter-spacing: 0.03em;
+  margin-top: 0.55em;
+  font-family: 'Lora', serif;
+  font-weight: 400;
+}
+
+.ornament {
+  display: flex; align-items: center; gap: 1.2rem;
+  justify-content: center; margin: 2.5rem auto;
+  opacity: 0; animation: fadeIn 2s ease 2s forwards;
+}
+.ornament-line { flex:1; max-width:100px; height:1px; background: linear-gradient(90deg, transparent, var(--dust)); }
+.ornament-line.r { background: linear-gradient(90deg, var(--dust), transparent); }
+.ornament-glyph { font-family: 'IM Fell English', serif; font-size: 1.2rem; color: var(--sepia); opacity: 0.7; }
+
+.hero-tagline {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--ink-faint);
+  max-width: 560px;
+  margin: 0 auto 3rem;
+  opacity: 0;
+  animation: riseIn 1.6s ease 2.6s forwards;
+  line-height: 1.8;
+}
+
+.scroll-cue {
+  position: absolute; bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+  z-index: 2; opacity: 0; animation: fadeIn 2s ease 4s forwards;
+}
+.scroll-cue span { font-family: 'Cinzel Decorative', serif; font-size: 0.52rem; letter-spacing: 0.5em; color: var(--dust); text-transform: uppercase; }
+.scroll-feather { font-size: 1.4rem; animation: featherBob 2.5s ease infinite; color: var(--sepia); opacity: 0.5; }
+@keyframes featherBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+/* ══ SECTIONS ══ */
+section {
+  position: relative; z-index: 2;
+  padding: clamp(3.5rem,8vw,7rem) clamp(1.5rem,8vw,7rem);
+  max-width: 1080px; margin: 0 auto;
+}
+.bg-blush  { background: linear-gradient(180deg, transparent, rgba(244,218,218,0.25) 30%, rgba(244,218,218,0.15) 70%, transparent); }
+.bg-sage   { background: linear-gradient(180deg, transparent, rgba(228,239,229,0.3) 30%, rgba(228,239,229,0.15) 70%, transparent); }
+.bg-amber  { background: linear-gradient(180deg, transparent, rgba(245,232,204,0.3) 30%, rgba(245,232,204,0.15) 70%, transparent); }
+
+.chapter-tag {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(0.5rem, 1vw, 0.65rem);
+  letter-spacing: 0.6em; color: var(--amber);
+  text-transform: uppercase; display: block; margin-bottom: 1.4rem;
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.chapter-tag.anim-ready { opacity: 0; transform: translateY(16px); }
+.chapter-tag.vis { opacity: 1; transform: translateY(0); }
+
+h2.section-title {
+  font-family: 'IM Fell English', serif;
+  font-size: clamp(1.8rem,4.5vw,3.2rem);
+  font-weight: 400; line-height: 1.25; color: var(--ink);
+  margin-bottom: 2rem;
+  opacity: 1; transform: translateY(0);
+  transition: opacity 1s ease 0.15s, transform 1s ease 0.15s;
+}
+h2.section-title.anim-ready { opacity: 0; transform: translateY(24px); }
+h2.section-title.vis { opacity: 1; transform: translateY(0); }
+
+.body-text {
+  font-size: clamp(1rem,1.7vw,1.12rem); color: var(--ink-light);
+  margin-bottom: 1.8rem;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.body-text.vis { opacity: 1; transform: translateY(0); }
+
+.hl-rose  { color: var(--rose); font-style: italic; }
+.hl-amber { color: var(--amber); }
+.hl-sage  { color: var(--sage); font-style: italic; }
+.hl-sepia { color: var(--sepia); }
+
+/* ══ QUOTE ══ */
+.quote-pull {
+  position: relative; margin: 3rem 0;
+  padding: 2rem 2.5rem 2rem 3.5rem;
+  border-left: 3px solid var(--rose-pale);
+  background: linear-gradient(135deg, rgba(244,218,218,0.22), rgba(255,255,255,0.45));
+  opacity: 0; transform: translateX(-24px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.quote-pull.vis { opacity: 1; transform: translateX(0); }
+.quote-pull::before {
+  content: '\201C';
+  position: absolute; top: -0.6rem; left: 0.8rem;
+  font-family: 'IM Fell English', serif; font-size: 5rem;
+  color: var(--rose-pale); line-height: 1; pointer-events: none;
+}
+.quote-pull p {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: clamp(1.05rem,2vw,1.3rem); color: var(--ink-light);
+  opacity: 1; transform: none; transition: none; margin: 0; line-height: 1.85;
+}
+
+/* ══ CARDS ══ */
+.cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 1.5rem; margin: 2.5rem 0;
+}
+.petal-card {
+  background: linear-gradient(145deg, #fff 0%, var(--cream) 100%);
+  border: 1px solid var(--linen);
+  padding: 2rem 1.8rem; position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.9s ease, transform 0.9s ease, box-shadow 0.3s, border-color 0.3s;
+}
+.petal-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--rose-pale), var(--amber-pale), var(--sage-pale));
+  transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+}
+.petal-card:hover::after { transform: scaleX(1); }
+.petal-card:hover { box-shadow: 0 8px 40px rgba(139,111,71,0.12); border-color: var(--amber-pale); }
+.petal-card.vis { opacity: 1; transform: translateY(0); }
+.petal-card .icon { font-size: 1.6rem; margin-bottom: 1rem; display: block; }
+.petal-card h3 {
+  font-family: 'IM Fell English', serif; font-size: 1.1rem; color: var(--ink); margin-bottom: 0.7rem; font-weight: 400;
+}
+.petal-card p { font-size: 0.95rem; color: var(--ink-faint); opacity: 1; transform: none; transition: none; margin: 0; line-height: 1.75; }
+
+/* ══ TIMELINE ══ */
+.age-timeline { position: relative; padding-left: clamp(2rem,5vw,3.5rem); margin: 2.5rem 0; }
+.age-timeline::before {
+  content: ''; position: absolute; left: 0; top: 0.6rem; bottom: 0.6rem; width: 1px;
+  background: linear-gradient(180deg, var(--rose-pale), var(--amber-pale), var(--sage-pale), transparent);
+}
+.t-item {
+  margin-bottom: 3rem; position: relative;
+  opacity: 0; transform: translateX(20px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.t-item::before {
+  content: ''; position: absolute;
+  left: clamp(-2.2rem,-5.3vw,-3.7rem); top: 0.55rem;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cream); border: 2px solid var(--amber);
+  box-shadow: 0 0 8px rgba(196,131,42,0.3);
+}
+.t-item.vis { opacity: 1; transform: translateX(0); }
+.t-age {
+  font-family: 'Cinzel Decorative', serif; font-size: 0.6rem;
+  letter-spacing: 0.45em; color: var(--amber); text-transform: uppercase; display: block; margin-bottom: 0.45rem;
+}
+.t-item h3 { font-family: 'IM Fell English', serif; font-size: 1.15rem; color: var(--ink); margin-bottom: 0.5rem; font-weight: 400; }
+.t-item p { font-size: 0.98rem; color: var(--ink-faint); opacity: 1; transform: none; transition: none; margin: 0; }
+
+/* ══ SCENE BOX ══ */
+.slap-flash { animation: slapFlash 0.6s ease forwards; }
+@keyframes slapFlash {
+  0%   { color: var(--ink); }
+  20%  { color: var(--rose); transform: skewX(-4deg) translateX(-4px); }
+  40%  { transform: skewX(3deg) translateX(3px); }
+  60%  { transform: skewX(-2deg); }
+  100% { color: var(--rose); transform: none; }
+}
+.scene-box {
+  background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(244,218,218,0.2));
+  border: 1px solid var(--linen); border-top: 3px solid var(--rose-pale);
+  padding: clamp(1.5rem,4vw,2.5rem); margin: 2.5rem 0; position: relative;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.scene-box.vis { opacity: 1; transform: translateY(0); }
+.scene-label {
+  font-family: 'Cinzel Decorative', serif; font-size: 0.55rem;
+  letter-spacing: 0.5em; color: var(--rose); text-transform: uppercase; display: block; margin-bottom: 1rem;
+}
+.scene-box p { font-style: italic; font-size: clamp(0.98rem,1.7vw,1.1rem); color: var(--ink-light); opacity: 1; transform: none; transition: none; margin: 0; }
+
+/* ══ INSIGHT PANEL ══ */
+.insight-panel {
+  background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(245,232,204,0.3));
+  border: 1px solid var(--linen); padding: clamp(1.5rem,4vw,2.8rem); margin: 2.5rem 0; position: relative;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.insight-panel::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--rose-pale), var(--amber-pale), var(--sage-pale));
+}
+.insight-panel.vis { opacity: 1; transform: translateY(0); }
+.insight-panel p { font-size: clamp(0.98rem,1.6vw,1.08rem); color: var(--ink-light); opacity: 1; transform: none; transition: none; margin: 0; line-height: 1.9; }
+
+/* ══ ATMOS BREAKS ══ */
+.atmos-break {
+  width: 100%; position: relative; overflow: hidden;
+  height: clamp(100px,20vh,200px);
+  display: flex; align-items: center; justify-content: center;
+}
+.atmos-word {
+  font-family: 'IM Fell English', serif;
+  font-size: clamp(4rem,16vw,13rem); font-style: italic;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(139, 111, 71);
+  white-space: nowrap; user-select: none;
+}
+
+/* ══ PETAL CANVAS ══ */
+#petal-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.55; }
+
+/* ══ STORM ══ */
+#storm-act {
+  text-align: center;
+  padding: clamp(5rem,12vw,9rem) clamp(1.5rem,8vw,7rem);
+  background: linear-gradient(180deg, transparent, rgba(184,200,212,0.12) 40%, rgba(184,200,212,0.08) 60%, transparent);
+}
+#storm-act h2.section-title {
+  background: linear-gradient(135deg, var(--storm-grey), var(--ink-light));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.orb-wrap {
+  position: relative;
+  width: clamp(220px,38vw,340px); height: clamp(220px,38vw,340px);
+  margin: 3rem auto; opacity: 0; transition: opacity 1.8s ease;
+}
+.orb-wrap.vis { opacity: 1; }
+.orb-base {
+  width: 100%; height: 100%; border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 38% 32%, rgba(255,255,255,0.7) 0%, transparent 45%),
+    radial-gradient(ellipse at 60% 65%, rgba(168,196,212,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse, rgba(184,200,212,0.6) 0%, rgba(110,126,140,0.4) 50%, rgba(80,100,120,0.3) 100%);
+  box-shadow: 0 20px 60px rgba(110,126,140,0.25), 0 0 0 1px rgba(168,196,212,0.3), inset 0 -10px 30px rgba(110,126,140,0.15);
+  animation: orbFloat 7s ease-in-out infinite;
+  position: relative; overflow: hidden;
+}
+.orb-base::before {
+  content: ''; position: absolute; top: 8%; left: 15%; width: 35%; height: 20%;
+  border-radius: 50%; background: rgba(255,255,255,0.35); transform: rotate(-25deg); filter: blur(4px);
+}
+.orb-ring {
+  position: absolute; inset: -12px; border-radius: 50%;
+  border: 1px solid rgba(168,196,212,0.25);
+  animation: ringRotate 12s linear infinite;
+}
+.orb-ring::after {
+  content: ''; position: absolute; top: 0; left: 50%;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(168,196,212,0.6); transform: translate(-50%,-50%);
+  box-shadow: 0 0 8px rgba(168,196,212,0.8);
+}
+.orb-ring-2 {
+  position: absolute; inset: -24px; border-radius: 50%;
+  border: 1px dashed rgba(110,126,140,0.12);
+  animation: ringRotate 20s linear infinite reverse;
+}
+.orb-text {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: 'Lora', serif; font-style: italic; font-size: clamp(0.75rem,1.6vw,0.9rem);
+  color: var(--ink); text-align: center; padding: 2.5rem; line-height: 1.65; opacity: 0.75;
+}
+@keyframes orbFloat {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+@keyframes ringRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ══ ENDING ══ */
+#ending {
+  min-height: 85vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  position: relative; overflow: hidden;
+  padding: clamp(4rem,10vw,8rem) clamp(1.5rem,8vw,7rem);
+}
+.ending-bloom {
+  position: absolute;
+  width: clamp(300px,60vw,600px); height: clamp(300px,60vw,600px);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(201,119,122,0.12) 0%, rgba(196,131,42,0.08) 40%, transparent 70%);
+  left: 50%; top: 50%; transform: translate(-50%,-50%);
+  animation: bloomPulse 7s ease-in-out infinite; filter: blur(20px); pointer-events: none;
+}
+@keyframes bloomPulse {
+  0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+  50%      { transform: translate(-50%,-50%) scale(1.2); opacity: 1; }
+}
+.final-quote {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: clamp(1.3rem,3.2vw,2.1rem); color: var(--ink);
+  max-width: 680px; line-height: 1.65; position: relative; z-index: 2;
+  opacity: 0; transition: opacity 2s ease;
+}
+.final-quote.vis { opacity: 1; }
+.end-ornament {
+  display: flex; align-items: center; gap: 1.2rem; justify-content: center;
+  margin: 2.5rem auto 1.5rem; opacity: 0; transition: opacity 1.5s ease 1.2s;
+}
+.end-ornament.vis { opacity: 1; }
+.end-ornament-line { width: 70px; height: 1px; background: linear-gradient(90deg, transparent, var(--dust)); }
+.end-ornament-line.r { background: linear-gradient(90deg, var(--dust), transparent); }
+.end-ornament-glyph { font-size: 1rem; color: var(--sepia); opacity: 0.5; }
+.the-end {
+  font-family: 'Cinzel Decorative', serif; font-size: clamp(0.6rem,1.2vw,0.78rem);
+  letter-spacing: 1.2em; color: var(--dust); text-transform: uppercase;
+  position: relative; z-index: 2; opacity: 0; transition: opacity 2s ease 2.5s;
+}
+.the-end.vis { opacity: 1; }
+.end-note {
+  font-family: 'Lora', serif; font-style: italic; font-size: clamp(0.9rem,1.5vw,1.05rem);
+  color: var(--ink-faint); max-width: 500px; margin: 1.5rem auto 0;
+  position: relative; z-index: 2; opacity: 0; transition: opacity 2s ease 1.8s; line-height: 1.8;
+}
+.end-note.vis { opacity: 1; }
+
+/* ══ KEYFRAMES ══ */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 600px) {
+  .cards-row { grid-template-columns: 1fr; }
+  .quote-pull { padding: 1.2rem 1.2rem 1.2rem 1.8rem; }
+  .age-timeline { padding-left: 1.8rem; }
+  .t-item::before { left: -2.1rem; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="petal-canvas"></canvas>
+
+<!-- FLOATING NAV -->
+<nav id="float-nav">
+  
+  <button class="nav-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Go to top">
+    <svg viewBox="0 0 24 24"><polyline points="3 9 12 2 21 9"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </button>
+</nav>
+
+<!-- THEME TOGGLE -->
+<button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme">
+  <span class="toggle-icon" id="themeIcon">🌙</span>
+  <span id="themeLabel">Dark</span>
+</button>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-wash wash-1"></div>
+  <div class="hero-wash wash-2"></div>
+  <div class="hero-wash wash-3"></div>
+  <div class="ink-lines" id="inkLines"></div>
+  <div class="hero-content">
+    <p class="eyebrow">A story of silence &amp; survival</p>
+    <h1 class="hero-title">
+      Silent Storm
+      <em>The Invisible Shadow — Pain behind the Quiet</em>
+    </h1>
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <span class="ornament-glyph">✦</span>
+      <div class="ornament-line r"></div>
+    </div>
+    <p class="hero-tagline">The journey of a soul that learned to endure everything in silence, because no one was ever truly listening.</p>
+  </div>
+  <div class="scroll-cue">
+    <span>begin</span>
+    <div class="scroll-feather">🪶</div>
+  </div>
+</div>
+
+<!-- ACT I -->
+<div class="atmos-break"><div class="atmos-word">Silence</div></div>
+
+<section id="act1">
+  <span class="chapter-tag">Act I — The Boy</span>
+  <h2 class="section-title">A Soul Shaped by Stillness</h2>
+  <p class="body-text">Lucian is a boy who wanted to live peacefully and happily. At a small age he felt many feelings and experienced the worst scenarios. The time was very difficult — we can't imagine how it feels to navigate paths without any clues.</p>
+  <p class="body-text">Lucian learned people by reading their minds — captured how they spoke to him when they had a need, and how they treated him when they were done. By being silent, he learned many things. He was very capable at some things and painfully aware of others. Although he was <span class="hl-rose">scared all the time</span>, that fear became his reason for silence. Everybody is talkative — but he is different.</p>
+  <div class="quote-pull">
+    <p>"His silence speaks more compared to a hundred talkative people."</p>
+  </div>
+  <p class="body-text">He imagined a world written in books — a beautiful vision filled with solitude and happiness. But the world in books is only one face. Deep down, everyone is infected by a kind of virus which kills their true personality. The reality is totally different, and he was unable to accept sometimes why the world was so cruel to him.</p>
+  <div class="cards-row">
+    <div class="petal-card">
+      <span class="icon">👁️</span>
+      <h3>The Observer</h3>
+      <p>He read people without words — seeing the masks behind their smiles, the calculations behind their kindness. Their actions would not surprise him anymore.</p>
+    </div>
+    <div class="petal-card">
+      <span class="icon">📖</span>
+      <h3>The Dreamer</h3>
+      <p>He imagined a world described in books — filled with solitude and happiness. But reality was crueller than any story he ever read.</p>
+    </div>
+    <div class="petal-card">
+      <span class="icon">🌿</span>
+      <h3>The Silent One</h3>
+      <p>At the age of ten, he completely understood the second face of the world. From there, he avoided everyone to maintain distance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="bg-amber">
+  <span class="chapter-tag">The Journey</span>
+  <h2 class="section-title">Milestones of a Lonely Road</h2>
+  <div class="age-timeline">
+    <div class="t-item">
+      <span class="t-age">Age 10</span>
+      <h3>The Second Face</h3>
+      <p>He understood the world's cruelty completely. He began maintaining distance from everyone, observing rather than participating in the performance around him.</p>
+    </div>
+    <div class="t-item">
+      <span class="t-age">High School</span>
+      <h3>The First Scar</h3>
+      <p>Wrongly accused, slapped, humiliated. His classmate framed him for a letter he never wrote. Authority failed to protect the innocent, and the injustice went unpunished.</p>
+    </div>
+    <div class="t-item">
+      <span class="t-age">After School</span>
+      <h3>The Lone Wolf</h3>
+      <p>He stood out without fear among the group of wolves — beside them with unimaginable psychological power, yet always unseen as a person of worth.</p>
+    </div>
+    <div class="t-item">
+      <span class="t-age">College</span>
+      <h3>New Lessons, Old Truths</h3>
+      <p>He entered university uncertain, enthusiasm high for learning. He learned that friends change easily — proximity doesn't equal loyalty.</p>
+    </div>
+    <div class="t-item">
+      <span class="t-age">Age 20</span>
+      <h3>The Mirror</h3>
+      <p>He became like water — shapeless, colourless, impressionable, shaped entirely by the actions others imposed on him. To those with anger, he returned the same.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ACT II: BETRAYAL -->
+<div class="atmos-break"><div class="atmos-word" style="-webkit-text-stroke-color:rgb(201, 119, 122)">Betrayal</div></div>
+
+<section id="act2" class="bg-blush">
+  <span class="chapter-tag">Act II — The First Scar</span>
+  <h2 class="section-title">The Sting of Being Unseen</h2>
+  <p class="body-text">Lucian sat in the study hall, focused on his notes, trying to absorb as much as he could for the upcoming exam. The soft hum of murmured discussions and the occasional shuffle of pages filled the room — a comforting rhythm that helped him concentrate.</p>
+  <p class="body-text">Just as he was beginning to settle into his work, a call came from the warden, summoning him to the office. Confused, Lucian hesitated. A sense of unease crept into his mind, but he shook it off, assuming it was something minor.</p>
+  <div class="scene-box" id="slapScene">
+    <span class="scene-label">The Moment</span>
+    <p>As he stepped into the office, the atmosphere felt heavy and tense. Before he could ask why he had been called — <span id="slapWord">the warden's hand struck his face.</span> His books slipped from his hand and hit the floor with a thud. Tears threatened to spill as he looked up in disbelief, his voice trembling: <em>"What did I do?"</em></p>
+  </div>
+  <div class="quote-pull">
+    <p>"The sting of the slap wasn't just physical — it pierced his heart. He felt betrayed by the very adults who were supposed to guide and protect him."</p>
+  </div>
+  <p class="body-text">Summoning his courage, he spoke with trembling but firm words: <span class="hl-amber">"I have no idea about this letter. Please, ask others or check anything to confirm — it's not mine."</span> The truth was eventually uncovered. Another student admitted to writing the letter, and Lucian was absolved.</p>
+  <p class="body-text">But when Lucian reported the true culprit to the warden — there were <span class="hl-rose">no consequences.</span> No reprimand. No apology. The injustice had been dismissed as nothing more than a small misunderstanding. Lucian stood there, feeling the sting of disappointment and disbelief.</p>
+  <div class="insight-panel">
+    <p>"He realized that being a good person was far more difficult than being bad. It only took one wrong action to tarnish a person's entire character. Most importantly, he came to understand the deep pain behind being punished for something you didn't do."</p>
+  </div>
+</section>
+
+<!-- ACT III -->
+<div class="atmos-break"><div class="atmos-word">Alone</div></div>
+
+<section id="act3" class="bg-sage">
+  <span class="chapter-tag">Act III — The Quiet Truth</span>
+  <h2 class="section-title">The Weight of Silence</h2>
+  <p class="body-text">He was someone who was ignored several times by all his classmates and relations. That lone wolf stood out without fear among the group of wolves — beside them with unimaginable psychological power, yet never given chances, time, love, or support.</p>
+  <p class="body-text">The hard truth about introverts in this world — <span class="hl-sage">they are used as a backup for support, and not as a priority.</span> No one wants to make them a priority just because of their silence. But no one can know the peace behind the silence of an introvert.</p>
+  <div class="quote-pull" style="border-left-color:var(--sage-pale);">
+    <p>"Hurting someone who understands you is easy because you believe they will know you without saying a word. They may comprehend everyone else's feelings, but no one can truly grasp their emotions when they are hurt by their loved ones."</p>
+  </div>
+  <div class="cards-row">
+    <div class="petal-card">
+      <span class="icon">🌊</span>
+      <h3>Like Water</h3>
+      <p>Children like Lucian are like water — shapeless, colourless, impressionable, shaped entirely by the actions others impose on them.</p>
+    </div>
+    <div class="petal-card">
+      <span class="icon">🦢</span>
+      <h3>Like Swans</h3>
+      <p>To gain an introvert's friendship, you must earn their trust as you would their loyalty. Their circle is small — fewer than five — but runs infinitely deep.</p>
+    </div>
+    <div class="petal-card">
+      <span class="icon">🪞</span>
+      <h3>Like a Mirror</h3>
+      <p>By observing every action, sound, and moment, he became a mirror — reflecting back whatever the world threw at him.</p>
+    </div>
+  </div>
+  <p class="body-text">Introverts are keenly aware when others are using them, often sensing manipulation through observations and empathy. Over time, the accumulation of hurt turns into emotional distance. <span class="hl-sage">Their silence isn't indifference — it is a shield against further emotional pain.</span></p>
+  <div class="insight-panel" style="border-top: 2px solid var(--sage-pale);">
+    <p>We, as humans, are not all the same. Introverts tend to lose themselves in helping others, often struggling to say "no" and overcommitting at the cost of their own well-being. Their expectations are simple — a little talk, honest smiles, and only transparency.</p>
+  </div>
+</section>
+
+<!-- ACT IV: STORM -->
+<div class="atmos-break"><div class="atmos-word" style="-webkit-text-stroke-color:rgba(110,126,140,0.09)">Storm</div></div>
+
+<section id="storm-act">
+  <span class="chapter-tag" style="color:var(--storm-grey)">Act IV — The Storm</span>
+  <h2 class="section-title" style="background:linear-gradient(135deg,var(--storm-grey),var(--ink-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Silent Storm</h2>
+  <div class="orb-wrap" id="stormOrb">
+    <div class="orb-base">
+      <div class="orb-text">The storm had been<br>brewing for years</div>
+    </div>
+    <div class="orb-ring"></div>
+    <div class="orb-ring-2"></div>
+  </div>
+  <p class="body-text" style="max-width:680px;margin:0 auto 1.8rem;">If introverts were to seek revenge, the world would feel the weight of it like never before. This silence is not the absence of emotion — <span class="hl-sepia">it is the accumulation of hurt, betrayal, and frustration suppressed over time.</span> They may not react immediately, but when pushed to their breaking point, the intensity of their response would be overwhelming.</p>
+  <div class="quote-pull" style="text-align:left;max-width:700px;margin:3rem auto;border-left-color:var(--storm-pale);">
+    <p>"An introvert's revenge would not be impulsive or loud. It would be calculated and deliberate — a reflection of their deep understanding of the people and situations that have wronged them."</p>
+  </div>
+  <p class="body-text" style="max-width:680px;margin:0 auto 1.8rem;">The true danger lies not in the moment of revenge itself, but in the silence that precedes it. When they finally decide to strike back, it's as if the world is hit by a storm that had been brewing for years. <span class="hl-rose">In that moment, no one would feel safe.</span></p>
+  <p class="body-text" style="max-width:680px;margin:0 auto;">The voice of an ordinary man may frighten a hundred, but <span class="hl-amber">the silence of an introvert can shatter the world or destroy millions of deceitful souls.</span> Every introvert is a predictor of what's to come, sensing the truth without needing to ask a single question.</p>
+</section>
+
+<!-- ENDING -->
+<div class="atmos-break"><div class="atmos-word">Remember</div></div>
+
+<section id="ending">
+  <div class="ending-bloom"></div>
+  <span class="chapter-tag" style="display:block;text-align:center;margin-bottom:2rem;">Epilogue</span>
+  <p class="final-quote" id="finalQuote">"Lucian's journey is a reminder that even the quietest souls carry immense strength — both mentally and logically. Though broken inside, he learned to guard his heart, retreating into silence to protect himself from further hurt."</p>
+  <div class="end-ornament" id="endOrnament">
+    <div class="end-ornament-line"></div>
+    <span class="end-ornament-glyph">✦</span>
+    <div class="end-ornament-line r"></div>
+  </div>
+  <p class="end-note" id="endNote">Those who understand pain often avoid causing it to others. Value people, prioritize them, and be thoughtful in your actions and words. Choose to nurture, not harm, the relationships that matter.</p>
+  <br>
+  <div class="the-end" id="theEnd">— The End —</div>
+<br>
+  <button class="nav-btn" onclick="history.back()" title="Go back">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Back
+  </button>
+</section>
+
+<script>
+/* THEME TOGGLE */
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark-theme');
+  document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = isDark ? 'Light' : 'Dark';
+  localStorage.setItem('ss-theme', isDark ? 'dark' : 'light');
+}
+if (localStorage.getItem('ss-theme') === 'dark') {
+  document.body.classList.add('dark-theme');
+  document.getElementById('themeIcon').textContent = '☀️';
+  document.getElementById('themeLabel').textContent = 'Light';
+}
+
+/* PETAL CANVAS */
+const pc = document.getElementById('petal-canvas');
+const px = pc.getContext('2d');
+let petals = [];
+function resizePC() { pc.width = window.innerWidth; pc.height = window.innerHeight; }
+resizePC();
+window.addEventListener('resize', resizePC);
+const pColors = ['rgba(201,119,122,0.35)','rgba(232,180,180,0.3)','rgba(196,131,42,0.22)','rgba(245,232,204,0.4)','rgba(122,158,126,0.25)'];
+function spawnPetal() {
+  petals.push({ x: Math.random()*pc.width, y:-20, r:Math.random()*5+3, rot:Math.random()*Math.PI*2,
+    rotSpeed:(Math.random()-0.5)*0.04, vx:(Math.random()-0.5)*0.8, vy:Math.random()*0.7+0.35,
+    color:pColors[Math.floor(Math.random()*pColors.length)] });
+}
+function drawPetals() {
+  px.clearRect(0,0,pc.width,pc.height);
+  petals.forEach(p => {
+    px.save(); px.translate(p.x,p.y); px.rotate(p.rot);
+    px.beginPath(); px.ellipse(0,0,p.r,p.r*0.55,0,0,Math.PI*2);
+    px.fillStyle=p.color; px.fill(); px.restore();
+    p.x += p.vx + Math.sin(p.y*0.01)*0.3; p.y += p.vy; p.rot += p.rotSpeed;
+  });
+  petals = petals.filter(p => p.y < pc.height+30);
+  requestAnimationFrame(drawPetals);
+}
+setInterval(spawnPetal, 700);
+drawPetals();
+
+/* INK DRIP LINES */
+const inkC = document.getElementById('inkLines');
+for (let i=0;i<8;i++) {
+  const l = document.createElement('div'); l.className='ink-line';
+  l.style.left = (10 + i*11 + Math.random()*5)+'%';
+  l.style.height = (40 + Math.random()*50)+'vh';
+  l.style.animationDuration = (6+Math.random()*8)+'s';
+  l.style.animationDelay = (Math.random()*10)+'s';
+  inkC.appendChild(l);
+}
+
+/* INTERSECTION OBSERVER */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('vis'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.body-text,.quote-pull,.petal-card,.t-item,.scene-box,.insight-panel').forEach(el => io.observe(el));
+
+// Add anim-ready to headings so they animate in on scroll
+document.querySelectorAll('.chapter-tag,.section-title').forEach(el => {
+  el.classList.add('anim-ready');
+  io.observe(el);
+});
+
+document.querySelectorAll('.petal-card').forEach((c,i) => c.style.transitionDelay = (i*0.14)+'s');
+document.querySelectorAll('.t-item').forEach((t,i) => t.style.transitionDelay = (i*0.18)+'s');
+
+/* STORM ORB */
+const orbEl = document.getElementById('stormOrb');
+new IntersectionObserver(e => { if(e[0].isIntersecting){ orbEl.classList.add('vis'); } }, {threshold:0.3}).observe(orbEl);
+
+/* SLAP EFFECT */
+const slapScene = document.getElementById('slapScene');
+new IntersectionObserver(e => {
+  if(e[0].isIntersecting){ setTimeout(()=>{ document.getElementById('slapWord').classList.add('slap-flash'); }, 700); }
+}, {threshold:0.5}).observe(slapScene);
+
+/* ENDING */
+new IntersectionObserver(e => {
+  if(e[0].isIntersecting){
+    document.getElementById('finalQuote').classList.add('vis');
+    setTimeout(()=>document.getElementById('endOrnament').classList.add('vis'), 1200);
+    setTimeout(()=>document.getElementById('endNote').classList.add('vis'), 2000);
+    setTimeout(()=>document.getElementById('theEnd').classList.add('vis'), 3200);
+  }
+}, {threshold:0.25}).observe(document.getElementById('ending'));
+
+/* PARALLAX ATMOS */
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  document.querySelectorAll('.atmos-word').forEach((w,i) => {
+    w.style.transform = `translateX(${sy * 0.022 * (i%2===0?1:-1)}px)`;
+  });
+});
+</script>
+</body>
+</html>
