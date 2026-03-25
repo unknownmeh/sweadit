@@ -543,7 +543,48 @@
         .footer-col ul li a:hover { color:var(--gold); }
         .footer-bottom { border-top:1px solid rgba(0,0,0,.07); padding:1.5rem 0; max-width:1200px; margin:0 auto; text-align:center; color:var(--text-muted); font-size:.82rem; }
 
-        /* ══════════════ ANIMATIONS ══════════════ */
+        /* ══════════════ MOBILE TOC STRIP ══════════════ */
+        .mobile-toc-strip {
+            display: none;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding: .6rem clamp(1rem,3vw,1.75rem);
+            background: var(--bg);
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+            position: sticky;
+            top: var(--nav-h);
+            z-index: 90;
+            gap: .5rem;
+            white-space: nowrap;
+        }
+        .mobile-toc-strip::-webkit-scrollbar { display: none; }
+        .mobile-toc-chip {
+            display: inline-flex; align-items: center; gap: .35rem;
+            padding: .3rem .75rem; border-radius: 999px;
+            background: var(--bg); box-shadow: var(--neu-sm);
+            font-size: .72rem; font-weight: 600; color: var(--text-secondary);
+            text-decoration: none; white-space: nowrap;
+            transition: var(--transition); flex-shrink: 0;
+        }
+        .mobile-toc-chip span {
+            font-size: .65rem; color: var(--gold); font-weight: 700;
+        }
+        .mobile-toc-chip:hover,
+        .mobile-toc-chip.active { box-shadow: var(--neu-press); color: var(--gold); }
+
+        @media (max-width: 900px) {
+            .mobile-toc-strip { display: flex; }
+        }
+
+        /* ══════════════ PRINT ══════════════ */
+        @media print {
+            .navbar, .mobile-toc-strip, .sidebar, .cta-section,
+            .footer, .hamburger, #overlay { display: none !important; }
+            .page-layout { grid-template-columns: 1fr; padding: 0; }
+            .policy-body { max-height: none !important; }
+            .policy-card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+        }
         @keyframes fadeUp { from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);} }
         .reveal { opacity:0; transform:translateY(28px); transition:opacity .75s ease,transform .75s cubic-bezier(.25,.46,.45,.94); }
         .reveal.visible { opacity:1; transform:translateY(0); }
@@ -556,38 +597,144 @@
         .stagger.visible > *:nth-child(6){opacity:1;transform:none;transition-delay:.40s;}
 
         /* ══════════════ RESPONSIVE ══════════════ */
-        @media(max-width:900px) {
-            .page-layout { grid-template-columns:1fr; }
-            .sidebar { position:static; }
-            .toc-card { display:none; } /* collapsed on mobile — shown via drawer */
-            .rights-grid { grid-template-columns:1fr; }
-            .footer-inner { grid-template-columns:1fr 1fr; }
-            .footer-brand { grid-column:1/-1; }
-            .footer-brand p { max-width:100%; }
-        }
-        @media(max-width:768px) {
-            .hamburger { display:flex; }
-            .nav-links-wrap {
-                position:fixed; top:0; right:-100%;
-                width:min(85vw,340px); height:100vh;
-                background:var(--bg); box-shadow:-8px 0 30px rgba(0,0,0,.1);
-                flex-direction:column; justify-content:center; align-items:flex-start;
-                padding:2.5rem 2rem; gap:1.5rem;
-                transition:right .4s cubic-bezier(.4,0,.2,1); z-index:1050;
+
+        /* ── Tablet: 900px and below ── */
+        @media (max-width: 900px) {
+            .page-layout {
+                grid-template-columns: 1fr;
+                padding: clamp(1.5rem,3vw,2.5rem) clamp(1rem,3vw,1.75rem) clamp(3rem,6vw,5rem);
+                gap: 1.5rem;
             }
-            .nav-links-wrap.active { right:0; }
-            .nav-links { flex-direction:column; gap:0; width:100%; }
-            .nav-links li { border-bottom:1px solid rgba(0,0,0,.06); }
-            .nav-link { display:block; padding:.9rem 0; font-size:1rem; }
-            .nav-actions { flex-direction:column; width:100%; gap:.75rem; }
-            .nav-btn { width:100%; justify-content:center; }
-            .update-banner { flex-direction:column; }
-            .update-date { margin-left:0; }
+            /* Content first, then sidebar (TOC) below */
+            .content-area { order: 1; }
+            .sidebar      { order: 2; position: static; }
+
+            /* Collapse full TOC card on tablet/mobile */
+            .toc-card { display: none; }
+
+            /* Rights grid single column */
+            .rights-grid { grid-template-columns: 1fr; }
+
+            /* Footer two columns */
+            .footer-inner { grid-template-columns: 1fr 1fr; }
+            .footer-brand { grid-column: 1 / -1; }
+            .footer-brand p { max-width: 100%; }
         }
-        @media(max-width:520px) {
-            .cta-btns .btn-gold,.cta-btns .btn-raised { width:100%; justify-content:center; }
-            .footer-inner { grid-template-columns:1fr; }
-            .data-table-wrap { overflow-x:auto; }
+
+        /* ── Mobile: 768px and below ── */
+        @media (max-width: 768px) {
+
+            /* Hamburger menu */
+            .hamburger { display: flex; }
+            .nav-links-wrap {
+                position: fixed; top: 0; right: -100%;
+                width: min(85vw, 340px); height: 100vh;
+                background: var(--bg); box-shadow: -8px 0 30px rgba(0,0,0,.1);
+                flex-direction: column; justify-content: center; align-items: flex-start;
+                padding: 2.5rem 2rem; gap: 1.5rem;
+                transition: right .4s cubic-bezier(.4,0,.2,1); z-index: 1050;
+            }
+            .nav-links-wrap.active { right: 0; }
+            .nav-links { flex-direction: column; gap: 0; width: 100%; }
+            .nav-links li { border-bottom: 1px solid rgba(0,0,0,.06); }
+            .nav-link { display: block; padding: .9rem 0; font-size: 1rem; }
+            .nav-actions { flex-direction: column; width: 100%; gap: .75rem; }
+            .nav-btn { width: 100%; justify-content: center; }
+
+            /* Hero: reduce top padding, wrap meta pills */
+            .hero {
+                padding: calc(var(--nav-h) + 2.5rem) clamp(1rem, 4vw, 2rem) 3rem;
+            }
+            .hero-meta { flex-wrap: wrap; justify-content: center; gap: .45rem; }
+            .meta-pill { font-size: .72rem; }
+
+            /* Update banner: stack vertically */
+            .update-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .update-date { margin-left: 0; align-self: flex-start; }
+
+            /* Summary card */
+            .summary-card { padding: 1.5rem; }
+            .summary-top { flex-wrap: wrap; gap: .75rem; }
+
+            /* Policy section headers: scale down to fit small screens */
+            .policy-header {
+                gap: .6rem;
+                padding: 1rem 1.1rem;
+                flex-wrap: nowrap;
+                align-items: center;
+            }
+            .policy-num  { width: 34px; height: 34px; min-width: 34px; font-size: .85rem; }
+            .policy-icon { width: 34px; height: 34px; min-width: 34px; font-size: .85rem; }
+            .policy-header-text h3   { font-size: 1rem; }
+            .policy-header-text span { font-size: .72rem; }
+            .policy-chevron { width: 28px; height: 28px; font-size: .65rem; flex-shrink: 0; }
+
+            /* Policy body */
+            .policy-body-inner { padding: 1.1rem; }
+            /* Increase max-height for open cards with lots of content */
+            .policy-card.open .policy-body { max-height: 4000px; }
+
+            /* Rights grid single column */
+            .rights-grid { grid-template-columns: 1fr !important; gap: .75rem; }
+            .right-item { padding: .9rem; }
+
+            /* Callouts */
+            .callout { padding: .9rem 1rem; gap: .65rem; }
+            .contact-inline { flex-wrap: wrap; gap: .65rem; }
+
+            /* Tables: horizontal scroll instead of overflow breaking layout */
+            .data-table-wrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: var(--radius-sm);
+            }
+            .data-table { min-width: 460px; }
+
+            /* CTA banner */
+            .cta-section { padding: 0 clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 5rem); }
+            .cta-banner  { padding: 2.5rem 1.5rem; }
+            .cta-btns    { flex-direction: column; align-items: stretch; gap: .75rem; }
+            .cta-btns .btn-gold,
+            .cta-btns .btn-raised { width: 100%; justify-content: center; }
+        }
+
+        /* ── Small phones: 520px and below ── */
+        @media (max-width: 520px) {
+
+            /* Tighter page padding */
+            .page-layout {
+                padding: 1.25rem 1rem 4rem;
+            }
+
+            /* Hero */
+            .hero { padding: calc(var(--nav-h) + 2rem) 1rem 2.5rem; }
+
+            /* Summary card */
+            .summary-top h2 { font-size: 1.3rem; }
+            .summary-icon   { width: 44px; height: 44px; font-size: 1.05rem; }
+
+            /* Policy headers: hide number badge on very small screens
+               to prevent text truncation — title remains fully readable */
+            .policy-num { display: none; }
+            .policy-header { gap: .55rem; padding: .9rem 1rem; }
+            .policy-header-text h3 { font-size: .95rem; }
+
+            /* Tables */
+            .data-table th,
+            .data-table td { padding: .55rem .65rem; font-size: .78rem; }
+
+            /* CTA */
+            .cta-banner { padding: 2rem 1.25rem; }
+            .cta-btns .btn-gold,
+            .cta-btns .btn-raised { width: 100%; justify-content: center; }
+
+            /* Footer: single column */
+            .footer-inner { grid-template-columns: 1fr; }
+            .footer { padding: 2.5rem 1.25rem 0; }
         }
     </style>
 </head>
@@ -633,6 +780,22 @@
         </div>
     </section>
 
+    <!-- ══════════════ MOBILE TOC STRIP ══════════════ -->
+    <nav class="mobile-toc-strip" aria-label="Jump to section">
+        <a href="#s1"  class="mobile-toc-chip"><span>01</span> Overview</a>
+        <a href="#s2"  class="mobile-toc-chip"><span>02</span> Data Collected</a>
+        <a href="#s3"  class="mobile-toc-chip"><span>03</span> How We Use It</a>
+        <a href="#s4"  class="mobile-toc-chip"><span>04</span> Cookies</a>
+        <a href="#s5"  class="mobile-toc-chip"><span>05</span> Data Sharing</a>
+        <a href="#s6"  class="mobile-toc-chip"><span>06</span> Retention</a>
+        <a href="#s7"  class="mobile-toc-chip"><span>07</span> Your Rights</a>
+        <a href="#s8"  class="mobile-toc-chip"><span>08</span> Children</a>
+        <a href="#s9"  class="mobile-toc-chip"><span>09</span> Security</a>
+        <a href="#s10" class="mobile-toc-chip"><span>10</span> International</a>
+        <a href="#s11" class="mobile-toc-chip"><span>11</span> Changes</a>
+        <a href="#s12" class="mobile-toc-chip"><span>12</span> Contact</a>
+    </nav>
+
     <!-- ══════════════ MAIN CONTENT ══════════════ -->
     <div class="page-layout">
 
@@ -668,7 +831,7 @@
                 </div>
                 <div class="toc-actions">
                     <button class="toc-action-btn" onclick="window.print()"><i class="fas fa-print"></i> Print Policy</button>
-                    <a href="mailto:privacy@aetheria.pub" class="toc-action-btn"><i class="fas fa-envelope"></i> Email Privacy Team</a>
+                    <a href="/cdn-cgi/l/email-protection#c1b1b3a8b7a0a2b881a0a4b5a9a4b3a8a0efb1b4a3" class="toc-action-btn"><i class="fas fa-envelope"></i> Email Privacy Team</a>
                     <a href="contact.html" class="toc-action-btn"><i class="fas fa-comments"></i> Ask a Question</a>
                 </div>
             </div>
@@ -725,7 +888,7 @@
                             <p>This policy was written in plain language — not legalese — so that every author and reader can understand exactly how their data is handled. If anything is unclear, please <a href="contact.html">reach out to us</a>.</p>
                         </div>
                         <h4>Who Is the Data Controller?</h4>
-                        <p>For the purposes of the General Data Protection Regulation (GDPR), India's Digital Personal Data Protection Act 2023 (DPDP Act), and other applicable privacy laws, Aetheria Publishing is the data controller. Our Data Protection Officer can be contacted at <a href="mailto:privacy@aetheria.pub">privacy@aetheria.pub</a>.</p>
+                        <p>For the purposes of the General Data Protection Regulation (GDPR), India's Digital Personal Data Protection Act 2023 (DPDP Act), and other applicable privacy laws, Aetheria Publishing is the data controller. Our Data Protection Officer can be contacted at <a href="/cdn-cgi/l/email-protection#61111308170002182100041509041308004f111403"><span class="__cf_email__" data-cfemail="86f6f4eff0e7e5ffc6e7e3f2eee3f4efe7a8f6f3e4">[email&#160;protected]</span></a>.</p>
                     </div>
                 </div>
             </div>
@@ -854,7 +1017,7 @@
                             <p>We use <strong>Plausible Analytics</strong> — a privacy-first analytics tool that does not use cookies by default, does not collect personal data, and does not track users across sites. We do not use Google Analytics.</p>
                         </div>
                         <h4>Managing Cookies</h4>
-                        <p>You can manage cookie preferences via our cookie consent banner, your browser settings, or by emailing <a href="mailto:privacy@aetheria.pub">privacy@aetheria.pub</a>. Disabling essential cookies will affect platform functionality.</p>
+                        <p>You can manage cookie preferences via our cookie consent banner, your browser settings, or by emailing <a href="/cdn-cgi/l/email-protection#e090928996818399a08185948885928981ce909582"><span class="__cf_email__" data-cfemail="0272706b7463617b426367766a67706b632c727760">[email&#160;protected]</span></a>. Disabling essential cookies will affect platform functionality.</p>
                     </div>
                 </div>
             </div>
@@ -1001,7 +1164,7 @@
                         </div>
                         <div class="contact-inline">
                             <i class="fas fa-paper-plane"></i>
-                            <p>To exercise any of these rights, email <a href="mailto:privacy@aetheria.pub">privacy@aetheria.pub</a> with "Privacy Request" in the subject line. We may verify your identity before processing. You also have the right to lodge a complaint with India's Data Protection Board.</p>
+                            <p>To exercise any of these rights, email <a href="/cdn-cgi/l/email-protection#d1a1a3b8a7b0b2a891b0b4a5b9b4a3b8b0ffa1a4b3"><span class="__cf_email__" data-cfemail="f9898b908f989a80b9989c8d919c8b9098d7898c9b">[email&#160;protected]</span></a> with "Privacy Request" in the subject line. We may verify your identity before processing. You also have the right to lodge a complaint with India's Data Protection Board.</p>
                         </div>
                     </div>
                 </div>
@@ -1025,7 +1188,7 @@
                             <p>Aetheria Publishing's platform is not directed at children under the age of <strong>13</strong>. We do not knowingly collect personal data from children under 13 without verifiable parental consent.</p>
                         </div>
                         <p>Users between 13 and 18 years of age may use the platform with the knowledge and consent of a parent or guardian. We encourage parents to monitor their children's online activities and to contact us if they believe their child has provided personal data without consent.</p>
-                        <p>If we become aware that we have collected personal data from a child under 13 without appropriate consent, we will delete it promptly. To report such a concern, contact us at <a href="mailto:privacy@aetheria.pub">privacy@aetheria.pub</a>.</p>
+                        <p>If we become aware that we have collected personal data from a child under 13 without appropriate consent, we will delete it promptly. To report such a concern, contact us at <a href="/cdn-cgi/l/email-protection#81f1f3e8f7e0e2f8c1e0e4f5e9e4f3e8e0aff1f4e3"><span class="__cf_email__" data-cfemail="ff8f8d96899e9c86bf9e9a8b979a8d969ed18f8a9d">[email&#160;protected]</span></a>.</p>
                     </div>
                 </div>
             </div>
@@ -1055,7 +1218,7 @@
                         </ul>
                         <div class="callout callout-violet">
                             <i class="fas fa-shield-alt"></i>
-                            <p>Despite our best efforts, no method of data transmission or storage is 100% secure. If you discover a security vulnerability, please report it responsibly to <a href="mailto:security@aetheria.pub">security@aetheria.pub</a>.</p>
+                            <p>Despite our best efforts, no method of data transmission or storage is 100% secure. If you discover a security vulnerability, please report it responsibly to <a href="/cdn-cgi/l/email-protection#c6b5a3a5b3b4afb2bf86a7a3b2aea3b4afa7e8b6b3a4"><span class="__cf_email__" data-cfemail="9be8fef8eee9f2efe2dbfafeeff3fee9f2fab5ebeef9">[email&#160;protected]</span></a>.</p>
                         </div>
                     </div>
                 </div>
@@ -1110,7 +1273,7 @@
                         <p>Your continued use of Aetheria after the effective date of any changes constitutes acceptance of the updated policy. If you do not agree to the changes, you may delete your account before they take effect.</p>
                         <div class="callout callout-gold">
                             <i class="fas fa-history"></i>
-                            <p>We maintain an archive of previous versions of this policy. You may request any previous version by emailing <a href="mailto:privacy@aetheria.pub">privacy@aetheria.pub</a>.</p>
+                            <p>We maintain an archive of previous versions of this policy. You may request any previous version by emailing <a href="/cdn-cgi/l/email-protection#d9a9abb0afb8baa099b8bcadb1bcabb0b8f7a9acbb"><span class="__cf_email__" data-cfemail="31414358475052487150544559544358501f414453">[email&#160;protected]</span></a>.</p>
                         </div>
                     </div>
                 </div>
@@ -1130,19 +1293,19 @@
                 <div class="policy-body">
                     <div class="policy-body-inner">
                         <p>If you have any questions, concerns, or requests regarding this Privacy Policy or the way we handle your personal data, please don't hesitate to get in touch.</p>
-                        <div class="rights-grid" style="grid-template-columns:1fr 1fr;">
+                        <div class="rights-grid">
                             <div class="right-item">
                                 <div class="right-icon" style="color:var(--gold);"><i class="fas fa-envelope"></i></div>
                                 <div>
                                     <h5>Privacy Team</h5>
-                                    <p><a href="mailto:privacy@aetheria.pub" style="color:var(--gold);">privacy@aetheria.pub</a></p>
+                                    <p><a href="/cdn-cgi/l/email-protection#c3b3b1aab5a2a0ba83a2a6b7aba6b1aaa2edb3b6a1" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="0676746f7067657f466763726e63746f6728767364">[email&#160;protected]</span></a></p>
                                 </div>
                             </div>
                             <div class="right-item">
                                 <div class="right-icon" style="color:var(--teal);"><i class="fas fa-lock"></i></div>
                                 <div>
                                     <h5>Security Issues</h5>
-                                    <p><a href="mailto:security@aetheria.pub" style="color:var(--gold);">security@aetheria.pub</a></p>
+                                    <p><a href="/cdn-cgi/l/email-protection#6c1f090f191e0518152c0d091804091e050d421c190e" style="color:var(--gold);"><span class="__cf_email__" data-cfemail="ff8c9a9c8a8d968b86bf9e9a8b979a8d969ed18f8a9d">[email&#160;protected]</span></a></p>
                                 </div>
                             </div>
                             <div class="right-item">
@@ -1228,7 +1391,7 @@
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         /* ── Mobile menu ── */
         function toggleMenu() {
             const w = document.getElementById('navWrap');
@@ -1283,27 +1446,44 @@
             tocLinks.forEach(l => {
                 l.classList.toggle('active', l.dataset.section === current);
             });
+
+            // Mobile TOC strip active chip
+            document.querySelectorAll('.mobile-toc-chip').forEach(chip => {
+                const href = chip.getAttribute('href').replace('#', '');
+                chip.classList.toggle('active', href === current);
+            });
         }
 
         window.addEventListener('scroll', updateProgress, { passive: true });
         updateProgress();
 
-        /* ── Smooth scroll ── */
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                const t = document.querySelector(a.getAttribute('href'));
-                if (t) {
-                    e.preventDefault();
-                    const offset = t.getBoundingClientRect().top + window.scrollY - (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) + 24);
-                    window.scrollTo({ top: offset, behavior: 'smooth' });
-                    // Open the card if it's a policy section
-                    if (t.classList.contains('policy-card') && !t.classList.contains('open')) {
-                        document.querySelectorAll('.policy-card.open').forEach(c => c.classList.remove('open'));
-                        t.classList.add('open');
-                    }
+        /* ── Smooth-scroll: offset for fixed navbar ── */
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (!target) return;
+                e.preventDefault();
+                const navH = parseInt(getComputedStyle(document.documentElement)
+                               .getPropertyValue('--nav-h')) || 74;
+                const offset = target.getBoundingClientRect().top + window.scrollY - navH - 16;
+                window.scrollTo({ top: offset, behavior: 'smooth' });
+
+                // Auto-open accordion if it's a policy card
+                if (target.classList.contains('policy-card') && !target.classList.contains('open')) {
+                    document.querySelectorAll('.policy-card.open').forEach(c => c.classList.remove('open'));
+                    target.classList.add('open');
                 }
             });
         });
+
+        /* ── Back to top on logo click ── */
+        document.querySelector('.nav-logo')?.addEventListener('click', e => {
+            if (window.scrollY > 200) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
     </script>
 </body>
 </html>
