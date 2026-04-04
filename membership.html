@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Become a Member — Aetheria Publishing</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --glass-bg: rgba(255,255,255,0.07);
+  --glass-border: rgba(255,255,255,0.18);
+  --blur: blur(22px);
+  --accent: #a78bfa;
+  --accent2: #60a5fa;
+  --accent3: #f472b6;
+  --text: #f0eeff;
+  --text-muted: rgba(220,214,255,0.55);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  min-height: 100vh;
+  background: #060414;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── ANIMATED BACKGROUND ── */
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: drift linear infinite;
+  opacity: 0.55;
+}
+.orb-1 { width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,.7),transparent 70%);top:-200px;left:-150px;animation-duration:22s; }
+.orb-2 { width:500px;height:500px;background:radial-gradient(circle,rgba(59,130,246,.6),transparent 70%);bottom:-100px;right:-100px;animation-duration:28s;animation-delay:-10s; }
+.orb-3 { width:350px;height:350px;background:radial-gradient(circle,rgba(236,72,153,.5),transparent 70%);top:40%;left:55%;animation-duration:18s;animation-delay:-5s; }
+.orb-4 { width:280px;height:280px;background:radial-gradient(circle,rgba(52,211,153,.4),transparent 70%);top:20%;right:15%;animation-duration:24s;animation-delay:-14s; }
+
+@keyframes drift {
+  0%   { transform:translate(0,0) scale(1); }
+  33%  { transform:translate(40px,-60px) scale(1.08); }
+  66%  { transform:translate(-30px,40px) scale(.95); }
+  100% { transform:translate(0,0) scale(1); }
+}
+
+.particles { position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
+.particle {
+  position:absolute;width:2px;height:2px;
+  background:rgba(255,255,255,.6);border-radius:50%;
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp {
+  0%   { transform:translateY(100vh);opacity:0; }
+  10%  { opacity:.8; }
+  90%  { opacity:.3; }
+  100% { transform:translateY(-20px) translateX(30px);opacity:0; }
+}
+
+/* ── HEADER ── */
+header {
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.2rem 3rem;
+  background:rgba(6,4,20,.55);
+  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.logo { font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:.28em;text-transform:uppercase;color:var(--text); }
+.logo em { font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+nav a { font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;margin-left:2.2rem;transition:color .3s; }
+nav a:hover { color:var(--accent); }
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:8rem 2rem 6rem;position:relative;z-index:1;
+}
+.hero-content { max-width:720px;position:relative; }
+
+.eyebrow {
+  font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.5em;text-transform:uppercase;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1.8rem;display:block;
+  opacity:0;animation:fadeUp 1s .2s ease forwards;
+}
+.hero h1 {
+  font-family:'Cormorant Garamond',serif;font-size:clamp(3.2rem,8vw,6rem);
+  font-weight:300;line-height:1.05;color:var(--text);
+  opacity:0;animation:fadeUp 1s .4s ease forwards;
+}
+.hero h1 em {
+  font-style:italic;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-rule {
+  width:1px;height:60px;
+  background:linear-gradient(to bottom,transparent,var(--accent),transparent);
+  margin:2.5rem auto;opacity:0;animation:fadeUp 1s .6s ease forwards;
+}
+.hero p {
+  font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;
+  color:var(--text-muted);line-height:1.9;max-width:500px;margin:0 auto 3rem;
+  opacity:0;animation:fadeUp 1s .7s ease forwards;
+}
+.hero-cta { opacity:0;animation:fadeUp 1s .9s ease forwards; }
+
+.btn-glass {
+  display:inline-flex;align-items:center;gap:.9rem;
+  padding:1rem 2.5rem;
+  background:rgba(167,139,250,.15);backdrop-filter:blur(20px);
+  border:1px solid rgba(167,139,250,.4);border-radius:4px;
+  color:var(--text);font-family:'Cinzel',serif;font-size:.65rem;
+  letter-spacing:.3em;text-transform:uppercase;text-decoration:none;
+  cursor:pointer;transition:all .4s;position:relative;overflow:hidden;
+}
+.btn-glass::after {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(167,139,250,.25),rgba(96,165,250,.15));
+  opacity:0;transition:opacity .4s;
+}
+.btn-glass:hover { border-color:rgba(167,139,250,.7);box-shadow:0 0 30px rgba(167,139,250,.35);transform:translateY(-2px); }
+.btn-glass:hover::after { opacity:1; }
+
+/* ── SECTIONS ── */
+section { padding:7rem 2rem;position:relative;z-index:1; }
+.container { max-width:1100px;margin:0 auto; }
+
+.section-label {
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;margin-bottom:1rem;
+}
+h2 { font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4.5vw,3.5rem);font-weight:300;color:var(--text);line-height:1.15; }
+h2 em { font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+
+/* ── PILLARS ── */
+.pillars-grid {
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:1.5px;margin-top:4rem;
+  background:linear-gradient(135deg,rgba(167,139,250,.18),rgba(96,165,250,.12));
+  border-radius:18px;overflow:hidden;
+}
+.pillar {
+  background:rgba(255,255,255,.04);backdrop-filter:blur(20px);
+  padding:3rem 2.5rem;position:relative;overflow:hidden;transition:background .4s;
+}
+.pillar::after { content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent); }
+.pillar:hover { background:rgba(167,139,250,.1); }
+
+.pillar-glow {
+  position:absolute;width:120px;height:120px;border-radius:50%;
+  filter:blur(40px);opacity:0;transition:opacity .5s;pointer-events:none;
+}
+.pillar:hover .pillar-glow { opacity:1; }
+.pillar:nth-child(1) .pillar-glow { background:var(--accent);top:-30px;left:-30px; }
+.pillar:nth-child(2) .pillar-glow { background:var(--accent2);top:-30px;left:-30px; }
+.pillar:nth-child(3) .pillar-glow { background:var(--accent3);top:-30px;left:-30px; }
+.pillar:nth-child(4) .pillar-glow { background:#34d399;top:-30px;left:-30px; }
+
+.pillar-num {
+  font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;line-height:1;
+  background:linear-gradient(135deg,rgba(167,139,250,.35),rgba(96,165,250,.25));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1.2rem;
+}
+.pillar h3 { font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text);margin-bottom:1rem; }
+.pillar p { font-size:.87rem;line-height:1.9;color:var(--text-muted); }
+
+/* ── TIERS ── */
+.tiers-header { text-align:center;margin-bottom:4rem; }
+.tiers-header p { font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--text-muted);margin-top:1.2rem; }
+
+.tiers-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem; }
+
+.tier {
+  background:rgba(255,255,255,.05);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;
+  padding:3.5rem 3rem;position:relative;overflow:hidden;
+  transition:transform .4s,box-shadow .4s,border-color .4s;
+}
+.tier::before {
+  content:'';position:absolute;inset:0;border-radius:20px;
+  background:linear-gradient(145deg,rgba(255,255,255,.1) 0%,transparent 40%,rgba(255,255,255,.03) 100%);
+  pointer-events:none;
+}
+.tier:hover { transform:translateY(-8px);border-color:rgba(167,139,250,.35);box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 50px rgba(167,139,250,.1); }
+
+.tier.featured {
+  background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.4);
+  box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 80px rgba(167,139,250,.15),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.tier.featured:hover { box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 100px rgba(167,139,250,.25); }
+
+.featured-ring {
+  position:absolute;inset:-1px;border-radius:20px;
+  background:linear-gradient(135deg,rgba(167,139,250,.6),rgba(96,165,250,.4),rgba(244,114,182,.4));
+  padding:1px;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none;
+}
+
+.tier-badge { font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1.5rem;display:block; }
+.tier.featured .tier-badge { background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+
+.tier-name { font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--text);margin-bottom:.6rem; }
+.tier-price {
+  font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.tier-price sub { font-size:1.2rem;vertical-align:middle; }
+.tier-price span { font-size:.85rem;font-family:'Outfit',sans-serif;font-weight:300;color:var(--text-muted);-webkit-text-fill-color:var(--text-muted); }
+
+.tier-divider { width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);margin:2rem 0; }
+
+.tier ul { list-style:none;margin-bottom:2.5rem; }
+.tier ul li {
+  font-size:.85rem;color:var(--text-muted);padding:.55rem 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  display:flex;align-items:center;gap:.8rem;line-height:1.5;
+}
+.tier ul li::before {
+  content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 0 6px rgba(167,139,250,.6);
+}
+
+.tier-btn {
+  display:block;width:100%;padding:1rem;text-align:center;
+  font-family:'Cinzel',serif;font-size:.63rem;letter-spacing:.3em;text-transform:uppercase;
+  text-decoration:none;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
+  color:var(--text);cursor:pointer;border-radius:8px;
+  transition:all .35s;position:relative;overflow:hidden;
+}
+.tier-btn::after { content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(167,139,250,.25),rgba(96,165,250,.15));opacity:0;transition:opacity .35s; }
+.tier-btn:hover { border-color:rgba(167,139,250,.5);box-shadow:0 0 25px rgba(167,139,250,.2); }
+.tier-btn:hover::after { opacity:1; }
+.tier.featured .tier-btn { background:linear-gradient(135deg,rgba(167,139,250,.25),rgba(96,165,250,.2));border-color:rgba(167,139,250,.5); }
+.tier.featured .tier-btn:hover { background:linear-gradient(135deg,rgba(167,139,250,.4),rgba(96,165,250,.3));box-shadow:0 0 35px rgba(167,139,250,.3); }
+
+/* ── FORM ── */
+.form-layout { display:grid;grid-template-columns:1fr 1.7fr;gap:5rem;align-items:start;margin-top:4rem; }
+
+.form-lore h3 { font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;font-style:italic;color:var(--text);line-height:1.55;margin-bottom:1.5rem; }
+.form-lore p { font-size:.87rem;color:var(--text-muted);line-height:2;margin-bottom:1.2rem; }
+
+.glass-seal {
+  margin-top:2.5rem;padding:1.5rem 2rem;
+  background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:12px;
+  backdrop-filter:blur(10px);
+}
+.glass-seal .seal-text { font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+
+.form-card {
+  background:rgba(255,255,255,.05);
+  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border:1px solid rgba(255,255,255,.12);border-radius:24px;
+  padding:3.5rem;position:relative;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.15);
+}
+.form-card::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(167,139,250,.6),rgba(96,165,250,.5),transparent);
+}
+
+.form-group { margin-bottom:1.8rem; }
+
+label {
+  display:block;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(167,139,250,.8);margin-bottom:.65rem;
+}
+
+input, select, textarea {
+  width:100%;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);border-radius:8px;
+  padding:.9rem 1.1rem;font-family:'Outfit',sans-serif;font-weight:300;font-size:.9rem;
+  color:var(--text);outline:none;transition:border-color .3s,box-shadow .3s,background .3s;
+  appearance:none;-webkit-appearance:none;
+}
+input::placeholder, textarea::placeholder { color:var(--text-muted);opacity:.5; }
+input:focus, select:focus, textarea:focus {
+  border-color:rgba(167,139,250,.5);background:rgba(167,139,250,.07);box-shadow:0 0 20px rgba(167,139,250,.12);
+}
+select {
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M0 0l5 7 5-7z' fill='rgba(167,139,250,.7)'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 1rem center;cursor:pointer;
+}
+select option { background:#1a1030;color:var(--text); }
+textarea { resize:none; }
+
+.form-row { display:grid;grid-template-columns:1fr 1fr;gap:1.5rem; }
+
+.form-check {
+  display:flex;gap:1rem;align-items:flex-start;margin-bottom:2.2rem;
+  padding:1rem 1.2rem;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);border-radius:8px;
+}
+.form-check input[type="checkbox"] {
+  width:16px;min-width:16px;height:16px;border-radius:4px;
+  padding:0;margin-top:2px;cursor:pointer;accent-color:var(--accent);
+  border:1px solid rgba(167,139,250,.4);background:rgba(167,139,250,.1);
+}
+.form-check p { font-size:.8rem;color:var(--text-muted);line-height:1.7; }
+.form-check a { color:var(--accent);text-decoration:none;transition:color .3s; }
+.form-check a:hover { color:var(--accent2); }
+
+.submit-btn {
+  display:inline-flex;align-items:center;gap:1rem;padding:1.1rem 3rem;
+  background:linear-gradient(135deg,rgba(139,92,246,.4),rgba(59,130,246,.3));
+  border:1px solid rgba(167,139,250,.5);border-radius:10px;
+  color:var(--text);font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.3em;
+  text-transform:uppercase;cursor:pointer;transition:all .4s;
+  position:relative;overflow:hidden;backdrop-filter:blur(10px);width:auto;
+}
+.submit-btn::before {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(139,92,246,.3),rgba(59,130,246,.2));
+  opacity:0;transition:opacity .4s;
+}
+.submit-btn:hover { box-shadow:0 0 40px rgba(139,92,246,.4),0 8px 30px rgba(0,0,0,.3);transform:translateY(-2px);border-color:rgba(167,139,250,.8); }
+.submit-btn:hover::before { opacity:1; }
+.submit-btn svg, .submit-btn span { position:relative;z-index:1; }
+.submit-btn svg { transition:transform .3s; }
+.submit-btn:hover svg { transform:translateX(5px); }
+
+/* ── SUCCESS ── */
+.success-msg { display:none;text-align:center;padding:4rem 2rem; }
+.success-msg.visible { display:block;animation:fadeUp .7s ease forwards; }
+.success-icon-wrap {
+  width:80px;height:80px;margin:0 auto 2rem;
+  background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:2rem;
+  box-shadow:0 0 40px rgba(167,139,250,.25);
+}
+.success-msg h3 {
+  font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1rem;
+}
+.success-msg p { font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--text-muted);font-size:1.15rem;line-height:1.9; }
+
+/* ── FOOTER ── */
+footer {
+  border-top:1px solid rgba(255,255,255,.07);padding:3rem;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1rem;position:relative;z-index:1;
+}
+footer p { font-size:.72rem;color:var(--text-muted);letter-spacing:.08em; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity:0;transform:translateY(32px);transition:opacity .9s ease,transform .9s ease; }
+.reveal.visible { opacity:1;transform:translateY(0); }
+
+@media (max-width:800px) {
+  header { padding:1.2rem 1.5rem; }
+  nav { display:none; }
+  .form-layout { grid-template-columns:1fr;gap:3rem; }
+  .form-row { grid-template-columns:1fr;gap:0; }
+  .tiers-grid { grid-template-columns:1fr; }
+  section { padding:5rem 1.5rem; }
+  .form-card { padding:2.5rem 1.8rem; }
+  footer { flex-direction:column;text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-canvas">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+<div class="particles" id="particles"></div>
+
+<header>
+  <div class="logo"><em>Aetheria</em> Publishing</div>
+  <nav>
+    <a href="#">About</a>
+    <a href="#">Catalogue</a>
+    <a href="#">Authors</a>
+    <a href="#membership-form">Join</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <span class="eyebrow">A new chapter awaits</span>
+    <h1>Begin Your<br><em>Publishing Journey</em></h1>
+    <div class="hero-rule"></div>
+    <p>At Aetheria, we believe every voice deserves to be heard. Join a collective of visionary writers and bring your stories into the world.</p>
+    <div class="hero-cta">
+      <a href="#membership-form" class="btn-glass">
+        Become a Member
+        <svg width="16" height="10" viewBox="0 0 16 10" fill="none"><path d="M0 5H14M9.5 1l4.5 4-4.5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <span class="section-label reveal">Why Aetheria</span>
+    <h2 class="reveal">Crafted for the <em>serious author</em></h2>
+    <div class="pillars-grid reveal">
+      <div class="pillar"><div class="pillar-glow"></div><div class="pillar-num">01</div><h3>Editorial Mastery</h3><p>World-class editors who understand your vision and refine it without diminishing your voice.</p></div>
+      <div class="pillar"><div class="pillar-glow"></div><div class="pillar-num">02</div><h3>Global Distribution</h3><p>Your work reaches readers across 40+ countries through our curated distribution partnerships.</p></div>
+      <div class="pillar"><div class="pillar-glow"></div><div class="pillar-num">03</div><h3>Royalty First</h3><p>Transparent, author-first royalty structures that reward your creative investment fairly and promptly.</p></div>
+      <div class="pillar"><div class="pillar-glow"></div><div class="pillar-num">04</div><h3>Author Community</h3><p>Exclusive retreats, masterclasses, and a private network of fellow Aetheria authors.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="tiers-header">
+      <span class="section-label reveal">Membership Tiers</span>
+      <h2 class="reveal">Choose your <em>path forward</em></h2>
+      <p class="reveal">Every tier includes access to our author dashboard and publishing toolkit.</p>
+    </div>
+    <div class="tiers-grid reveal">
+      <div class="tier">
+        <span class="tier-badge">Essentials</span>
+        <div class="tier-name">Folio</div>
+        <div class="tier-price"><sub>₹</sub>999 <span>/ month</span></div>
+        <div class="tier-divider"></div>
+        <ul>
+          <li>Manuscript submission portal</li>
+          <li>1 editorial review per quarter</li>
+          <li>Digital distribution (3 platforms)</li>
+          <li>Author profile page</li>
+          <li>Monthly webinar access</li>
+        </ul>
+        <a href="#membership-form" class="tier-btn" onclick="selectTier('Folio')">Begin with Folio</a>
+      </div>
+      <div class="tier featured">
+        <div class="featured-ring"></div>
+        <span class="tier-badge">★ Most Chosen</span>
+        <div class="tier-name">Codex</div>
+        <div class="tier-price"><sub>₹</sub>2,499 <span>/ month</span></div>
+        <div class="tier-divider"></div>
+        <ul>
+          <li>Priority manuscript review</li>
+          <li>Dedicated senior editor</li>
+          <li>Distribution across 20+ platforms</li>
+          <li>Cover design consultation</li>
+          <li>Quarterly royalty reports</li>
+          <li>Community retreat invitations</li>
+          <li>Marketing &amp; launch support</li>
+        </ul>
+        <a href="#membership-form" class="tier-btn" onclick="selectTier('Codex')">Begin with Codex</a>
+      </div>
+      <div class="tier">
+        <span class="tier-badge">Full Service</span>
+        <div class="tier-name">Opus</div>
+        <div class="tier-price"><sub>₹</sub>5,999 <span>/ month</span></div>
+        <div class="tier-divider"></div>
+        <ul>
+          <li>White-glove publishing service</li>
+          <li>Full editorial &amp; design team</li>
+          <li>Global distribution (40+ countries)</li>
+          <li>Rights management support</li>
+          <li>Bespoke marketing campaigns</li>
+          <li>Literary agent introductions</li>
+          <li>Annual in-person retreat</li>
+        </ul>
+        <a href="#membership-form" class="tier-btn" onclick="selectTier('Opus')">Begin with Opus</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="membership-form">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:1rem;">
+      <span class="section-label reveal">Your Story Starts Here</span>
+    </div>
+    <div class="form-layout">
+      <div class="form-lore reveal">
+        <h3>"Every great book began with a single, courageous decision."</h3>
+        <p>This is yours. Fill in your details and our membership team will reach out within two working days to begin your onboarding.</p>
+        <p>Whether you have a finished manuscript, an idea, or simply a desire to create — Aetheria is built for you.</p>
+        <div class="glass-seal">
+          <span class="seal-text">✦ &nbsp; Aetheria Publishing &nbsp; ✦</span>
+          <p style="font-size:.75rem;color:var(--text-muted);margin-top:.5rem;line-height:1.7;">Est. for the bold. Built for the true.</p>
+        </div>
+      </div>
+
+      <div class="form-card reveal">
+        <form id="memberForm" onsubmit="handleSubmit(event)" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">First Name</label>
+              <input type="text" id="fname" name="fname" placeholder="Your first name" required>
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name</label>
+              <input type="text" id="lname" name="lname" placeholder="Your last name" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="+91 00000 00000">
+          </div>
+          <div class="form-group">
+            <label for="genre">Primary Genre</label>
+            <select id="genre" name="genre" required>
+              <option value="" disabled selected>Select your genre</option>
+              <option>Literary Fiction</option>
+              <option>Contemporary Fiction</option>
+              <option>Non-Fiction / Memoir</option>
+              <option>Poetry &amp; Verse</option>
+              <option>Science Fiction &amp; Fantasy</option>
+              <option>History &amp; Biography</option>
+              <option>Self-Help &amp; Wellness</option>
+              <option>Business &amp; Finance</option>
+              <option>Children's &amp; Young Adult</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tier">Membership Tier</label>
+            <select id="tier" name="tier" required>
+              <option value="" disabled selected>Select a membership tier</option>
+              <option value="Folio">Folio — ₹999 / month</option>
+              <option value="Codex">Codex — ₹2,499 / month ★</option>
+              <option value="Opus">Opus — ₹5,999 / month</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="stage">Manuscript Stage</label>
+            <select id="stage" name="stage">
+              <option value="" disabled selected>Where are you in your journey?</option>
+              <option>Idea / Early Concept</option>
+              <option>First Draft in Progress</option>
+              <option>First Draft Complete</option>
+              <option>Revised &amp; Ready for Editing</option>
+              <option>Fully Polished Manuscript</option>
+              <option>Previously Published</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Tell Us About Your Work</label>
+            <textarea id="message" name="message" rows="4" placeholder="A brief synopsis, your inspirations, or what you hope to achieve…"></textarea>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" id="agree" name="agree" required>
+            <p>I agree to the <a href="#">Terms of Membership</a> and <a href="#">Privacy Policy</a> of Aetheria Publishing.</p>
+          </div>
+          <button type="submit" class="submit-btn">
+            <span>Begin My Journey</span>
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><path d="M0 6H16M11 1l5 5-5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
+        <div class="success-msg" id="successMsg">
+          <div class="success-icon-wrap">✦</div>
+          <h3>Welcome to Aetheria</h3>
+          <p>Your application has been received.<br>Our membership team will be in touch within two working days.<br><br><em>Your story begins now.</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><em>Aetheria</em> Publishing</div>
+  <p>© 2025 Aetheria Publishing. All rights reserved.</p>
+  <p>hello@aetheriapublishing.com</p>
+</footer>
+
+<script>
+  // Floating particles
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 45; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `left:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*15}s;opacity:${Math.random()*.5+.2};`;
+    container.appendChild(p);
+  }
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  function selectTier(name) {
+    const s = document.getElementById('tier');
+    for (let o of s.options) if (o.value === name) { o.selected = true; break; }
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('memberForm');
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    const btn = form.querySelector('.submit-btn span');
+    btn.textContent = 'Submitting…';
+    form.querySelector('.submit-btn').disabled = true;
+    setTimeout(() => {
+      form.style.display = 'none';
+      document.getElementById('successMsg').classList.add('visible');
+    }, 1200);
+  }
+</script>
+</body>
+</html>
