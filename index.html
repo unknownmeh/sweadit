@@ -121,8 +121,8 @@
         .book-cover-wrap { position:relative; overflow:hidden; height:clamp(195px,23vw,255px); }
         .book-cover { width:100%; height:100%; object-fit:cover; transition:transform .55s ease; display:block; }
         .book-card:hover .book-cover { transform:scale(1.07); }
-        
-        .book-genre-badge { position:absolute; top:12px; right:12px; padding:.28rem .78rem; border-radius:999px; background:var(--bg); box-shadow:var(--neu-sm); font-size:.68rem; font-weight:700; color:var(--gold); letter-spacing:.07em; text-transform:uppercase; }
+        .book-cover-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(45,37,24,.72) 0%,transparent 55%); }
+        .book-genre-badge { position:absolute; top:12px; right:12px; padding:.28rem .78rem; border-radius:999px; background:var(--bg);  font-size:.68rem; font-weight:700; color:var(--gold); letter-spacing:.07em; text-transform:uppercase; }
         .book-info { padding:clamp(1.1rem,2.5vw,1.6rem); flex:1; display:flex; flex-direction:column; }
         .book-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; margin-bottom:.3rem; line-height:1.25; color:var(--text-primary); }
         .book-title a { text-decoration:none; color:inherit; transition:var(--transition); }
