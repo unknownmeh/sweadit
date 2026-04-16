@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E. V. Black | Author</title>
+    <!-- Fonts: Playfair Display + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <style>
+        /* Variables */
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-darker: #05070a;
+            --text-primary: #f0f2f5;
+            --text-secondary: #a0a8b5;
+            --accent: #4a729e;
+
+            --glass-bg: rgba(20, 25, 35, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Global resets */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            background-image: radial-gradient(circle at 50% 0%, #151d2e 0%, var(--bg-darker) 100%);
+            min-height: 100vh;
+        }
+
+        /* Aesthetic elements */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
+            z-index: 9999;
+        }
+
+        .glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glow-1 {
+            width: 50vw;
+            height: 50vw;
+            top: -20vh;
+            left: -10vw;
+            background: radial-gradient(circle, rgba(45, 85, 130, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+        }
+
+        .glow-2 {
+            width: 60vw;
+            height: 60vw;
+            bottom: -30vh;
+            right: -20vw;
+            background: radial-gradient(circle, rgba(30, 45, 60, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Utilities */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 16px;
+        }
+
+        .section-spacing {
+            padding: 120px 5% 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition-smooth);
+            padding: 25px 5%;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 14, 23, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 15px 5%;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -6px;
+            left: 0;
+            background-color: var(--text-primary);
+            transition: var(--transition-smooth);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            opacity: 1;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 100px;
+            /* Offset for nav */
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 5rem;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .profile-card {
+            padding: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            bottom: -5px;
+            left: -5px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            z-index: -1;
+        }
+
+        .profile-image-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(10%) contrast(1.15) brightness(0.9);
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .writer-name {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #ffffff, #a0a8b5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        .writer-bio {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 550px;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* Works Section */
+        .works {
+            margin-bottom: 80px;
+        }
+
+        .section-header {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-size: 3.5rem;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-weight: 300;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3.5rem;
+            justify-content: center;
+        }
+
+        .book-card {
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            background: rgba(20, 25, 35, 0.25);
+            /* slightly more transparent for deep feel */
+        }
+
+        .book-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(20, 25, 35, 0.4);
+        }
+
+        .book-image-wrapper {
+            width: 100%;
+            aspect-ratio: 400 / 280;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .book-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .book-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 7, 10, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(2px);
+        }
+
+        .read-more {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 12px 30px;
+            border-radius: 40px;
+            transform: translateY(20px);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .read-more:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .book-card:hover .book-image {
+            transform: scale(1.08);
+        }
+
+        .book-card:hover .book-overlay {
+            opacity: 1;
+        }
+
+        .book-card:hover .read-more {
+            transform: translateY(0);
+        }
+
+        .book-info {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-info h3 {
+            font-size: 1.7rem;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+        }
+
+        .book-info p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        footer {
+            padding: 40px 5%;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            background: rgba(20, 25, 35, 0.2);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Animations / Interactivity */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                gap: 3rem;
+            }
+
+            .writer-name {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding-top: 150px;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 2.5rem;
+            }
+
+            .writer-bio {
+                margin: 0 auto;
+            }
+
+            .profile-image-container {
+                width: 250px;
+                height: 250px;
+            }
+
+            .writer-name {
+                font-size: 3.5rem;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 20px 5%;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .profile-image-container {
+                width: 220px;
+                height: 220px;
+            }
+
+            .writer-name {
+                font-size: 2.8rem;
+            }
+
+            .section-header h2 {
+                font-size: 2.8rem;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <!-- Abstract Background Elements -->
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-content">
+            <span class="logo">AETHERIA.PUBLISHING</span>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#works" class="nav-link">Works</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero / Writer Section -->
+        <section id="home" class="hero section-spacing">
+            <div class="hero-content reveal">
+                <div class="profile-card glass-card">
+                    <div class="profile-image-container">
+                        <img src="../images/download.jpg" alt="Writer Profile" class="profile-image">
+                    </div>
+                </div>
+                <div class="hero-text">
+                    <h1 class="writer-name">Aditya Tumu</h1>
+                    <p class="writer-bio">
+                        Navigating the profound corridors of human psychology through storytelling. I write to explore
+                        the shadows we prefer to ignore, crafting narratives that linger long after the final page is
+                        turned.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Books Section -->
+        <section id="works" class="works section-spacing reveal">
+            <div class="section-header">
+                <h2>Books</h2>
+                <p>Tales of suspense, deep emotion, and the human condition.</p>
+            </div>
+
+            <div class="books-grid">
+                <!-- Book 1 -->
+                <div class="book-card glass-card">
+                    <div class="book-image-wrapper">
+                        <img src="../images/silentstorm.png" alt="The Silent Echo" class="book-image">
+                        <div class="book-overlay">
+                           <a href="../books/silent_storm.html"><span class="read-more">Read More</span></a>
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3>The Silent Storm</h3>
+                        <p>A thriller uncovering long-buried secrets in a misty coastal town, confronting echoes of the
+                            past.</p>
+                    </div>
+                </div>
+
+                <!-- Book 2 -->
+                <div class="book-card glass-card">
+                    <div class="book-image-wrapper">
+                        <img src="../images/turimg.png" alt="Fragments of Time" class="book-image">
+                        <div class="book-overlay">
+                           <a href="../books/the_unseen_room.html"> <span class="read-more">Read More</span></a>
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3>The Unseen Room</h3>
+                        <p>A gripping tale of memory, loss, and the eternal passage of the years etched entirely through
+                            a single pocket watch.</p>
+                    </div>
+                </div>
+
+                <!-- Book 3 -->
+                <div class="book-card glass-card">
+                    <div class="book-image-wrapper">
+                        <img src="../images/wocimg.png" alt="Abyssal Minds" class="book-image">
+                        <div class="book-overlay">
+                           <a href="https://lucifer-writings.vercel.app/"><span class="read-more">Read More</span></a>
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3>Whispers of Caring</h3>
+                        <p>An emotional deep-dive into the vast, turbulent oceans of the human psyche and identity.</p>
+                    </div>
+                </div>
+                <!-- Book  4-->
+                <div class="book-card glass-card">
+                    <div class="book-image-wrapper">
+                        <img src="../images/vanam_vanaram.png" alt="Abyssal Minds" class="book-image">
+                        <div class="book-overlay">
+                           <a href="../books/vanam_vanaram.html"> <span class="read-more">Read More</span></a>
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3>Vanam Vaanaram</h3>
+                        <p>An emotional deep-dive into the vast, turbulent oceans of the human psyche and identity.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content glass-card">
+            <p>&copy; 2026 Aetheria Publishing. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Scroll Reveal functionality
+            const revealElements = document.querySelectorAll('.reveal');
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Allow elements to remain visible once revealed
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px" // Triggers slightly before element comes into view
+            });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // Sticky Navigation functionality
+            const navbar = document.getElementById('navbar');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // Simple Parallax Effect on Mouse Move for Hero Section Depth
+            const heroContent = document.querySelector('.hero-content');
+
+            document.addEventListener('mousemove', (e) => {
+                // Calculate very subtle movement relative to center of screen
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 60;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 60;
+
+                if (heroContent) {
+                    // Limits effect to screen > 768px for performance on mobile
+                    if (window.innerWidth > 768) {
+                        heroContent.style.transform = `translate(${xAxis}px, ${yAxis}px)`;
+                    } else {
+                        heroContent.style.transform = `translate(0px, 0px)`;
+                    }
+                }
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>
